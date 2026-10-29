@@ -7,11 +7,13 @@ Plantilla moderna para una mueblería, con aspecto editorial, responsive y funci
 - Hero fotográfico, colecciones de sala/comedor/dormitorio, marca, beneficios, proceso de pedido, contacto y pie de página.
 - Catálogo de **12 productos ilustrativos**, filtros, orden por precio/nombre, búsqueda, detalle de producto y favoritos.
 - Carrito con cantidades y total **siempre calculado en bolivianos (Bs)**.
-- Selector de visualización BOB/USD con conversión **ilustrativa**, no conectada a un tipo de cambio en tiempo real.
+- Selector de visualización de moneda («Bolivianos (Bs)» y «Dólares ($ USD)») con conversión referencial (1 USD = 6.96 Bs).
 - Formulario para **preparar** un pedido; genera un resumen para copiar o compartir por WhatsApp. Incluye modalidad de entrega y notas.
 - Personalización de WhatsApp, correo, dirección y horarios desde el enlace «Editar datos del negocio» del pie de página (solo en el navegador actual).
-- Mapa interactivo con La Paz como **referencia**, hasta que se establezca la dirección correcta.
+- Mapa interactivo centrado en el showroom de MARVI en La Paz (coordenadas: -16.4867, -68.1579), con botón directo «Cómo llegar» hacia Google Maps y subventana interactiva de horarios (`HoursPopover`) para PC y móvil.
 - Formulario de consultas que prepara un mensaje para compartir, modo claro/oscuro, navegación móvil, animaciones y botón para subir.
+- Enlaces del menú con elevación sutil de 2 px y subrayado al pasar el cursor en PC, y respuesta al tocar o enfocar en móvil. Con movimiento reducido, conservan la señal visual sin desplazamientos ni transiciones.
+- Botón flotante de WhatsApp con icono SVG oficial estilizado y nítido, onda suave de entrada e interacción, sin pulsos continuos. Conserva márgenes adaptados a las zonas seguras del móvil y separación con «Volver arriba»; con movimiento reducido permanece estático. Su enlace directo funciona sin JavaScript y usa el número fijo **+591 78998651**, independiente de la configuración local. Los demás accesos de WhatsApp (consultas, horarios y pedidos) conservan el número configurable del negocio.
 - Los favoritos, carrito, temas, preferencias y pedidos preparados se guardan localmente en el dispositivo mediante `localStorage` (si el navegador lo permite).
 
 ## Cómo arrancar el proyecto
@@ -88,7 +90,7 @@ MARVI-Astro/
 │   │   ├── modals/      ← CartDrawer, QuickViewModal, OrderModal, ConfigModal
 │   │   ├── scripts/     ← StoreScript (lógica de catálogo, carrito y estado)
 │   │   ├── sections/    ← Hero, Features, Collections, Intro, Catalog, Banner, Journey, Location, Contact
-│   │   └── ui/          ← FloatActions (BackTop, WhatsAppFloat, Toast)
+│   │   └── ui/          ← FloatActions (BackTop, WhatsAppFloat, Toast), HoursPopover
 │   ├── layouts/
 │   │   └── Layout.astro ← Layout principal con metadatos, fuentes y estructura
 │   ├── pages/

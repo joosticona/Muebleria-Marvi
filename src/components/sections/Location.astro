@@ -1,41 +1,54 @@
 ---
 import Button from '../common/Button.astro';
 import Icon from '../common/Icon.astro';
+import HoursPopover from '../ui/HoursPopover.astro';
 ---
 
 <section class="location" id="ubicacion">
   <div class="shell location-grid">
     <div class="location-left reveal">
-      <p class="eyebrow">Estamos más cerca</p>
+      <div class="location-badge">
+        <span class="status-pulse" aria-hidden="true"></span>
+        <span>Showroom & Punto de atención</span>
+      </div>
       <h2>
         Ven a imaginar
         <br />
         <em>tu próximo hogar.</em>
       </h2>
       <p>
-        El mapa es interactivo y muestra La Paz como referencia inicial.
-        Configura la dirección real de MARVI para activar indicaciones exactas.
+        Visítanos en nuestro showroom en La Paz para apreciar de cerca las
+        texturas, maderas y acabados de cada colección. Nuestro equipo te
+        asesorará en cada detalle.
       </p>
       <div class="location-meta">
         <div class="location-line">
-          <Icon name="pin" />
+          <div class="location-icon-box">
+            <Icon name="pin" />
+          </div>
           <div>
             <strong>Ubicación</strong>
-            <span id="shopAddress">
-              La Paz, Bolivia · ubicación referencial
-            </span>
+            <span id="shopAddress">La Paz, Bolivia</span>
+            <span class="location-coords-badge">Coord: -16.4867, -68.1579</span>
           </div>
         </div>
         <div class="location-line">
-          <Icon name="clock" />
-          <div>
+          <div class="location-icon-box">
+            <Icon name="clock" />
+          </div>
+          <div class="location-hours-box">
             <strong>Visitas y horarios</strong>
-            <span id="shopHours">Consulta disponibilidad antes de visitar</span>
+            <HoursPopover id="hoursPopover" />
           </div>
         </div>
       </div>
       <div class="location-actions">
-        <Button variant="dark" id="directionsBtn" type="button">
+        <Button
+          variant="dark"
+          id="directionsBtn"
+          type="button"
+          aria-label="Cómo llegar a MARVI en Google Maps"
+        >
           Cómo llegar <Icon name="arrow" />
         </Button>
         <Button variant="outline" href="#contacto">
@@ -45,22 +58,28 @@ import Icon from '../common/Icon.astro';
     </div>
     <div>
       <div class="map-card reveal">
+        <div class="map-overlay-badge">
+          <span class="pulse-dot"></span>
+          <span>Ubicación MARVI</span>
+        </div>
         <iframe
-          title="Mapa interactivo referencial de La Paz, Bolivia"
+          title="Mapa de ubicación MARVI en La Paz, Bolivia"
           loading="lazy"
           referrerpolicy="no-referrer"
           id="mapFrame"
-          src="https://www.openstreetmap.org/export/embed.html?bbox=-68.157%2C-16.525%2C-68.096%2C-16.475&layer=mapnik"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-68.163%2C-16.492%2C-68.153%2C-16.481&layer=mapnik&marker=-16.486659%2C-68.157926"
         ></iframe>
         <div class="map-marker-label" id="mapCaption">
-          LA PAZ · BOLIVIA
-          <small>Vista referencial, no marca una tienda real</small>
+          MARVI · SHOWROOM LA PAZ
+          <small>
+            Coordenadas: -16.4867, -68.1579 · Pulsa «Cómo llegar» para navegar
+          </small>
         </div>
       </div>
       <div class="map-actions">
         <Icon name="pin" size="tiny" />{' '}
         <span id="mapSource">
-          Puedes ampliar y mover el mapa libremente · Datos de OpenStreetMap
+          Mapa interactivo · Haz clic en «Cómo llegar» para abrir en Google Maps
         </span>
       </div>
     </div>

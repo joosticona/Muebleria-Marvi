@@ -231,13 +231,68 @@
         margin: auto;
       }
       .navlinks a {
+        padding-block: 6px;
+        margin-block: -6px;
         font-size: 12px;
         font-weight: 600;
         white-space: nowrap;
-        transition: color 0.2s;
       }
-      .navlinks a:hover {
+      .navlinks a,
+      .mobile-nav a {
+        position: relative;
+        transition:
+          color 0.2s ease,
+          transform 0.2s ease;
+      }
+      .navlinks a::before {
+        content: '';
+        position: absolute;
+        inset: -3px 0;
+      }
+      .navlinks a::after,
+      .mobile-nav a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 2px;
+        height: 1px;
+        background: currentColor;
+        opacity: 0;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        pointer-events: none;
+      }
+      .mobile-nav a::after {
+        left: 5px;
+        right: auto;
+        bottom: 6px;
+        width: 32px;
+      }
+      .navlinks a:focus-visible,
+      .mobile-nav a:focus-visible,
+      .mobile-nav a:active {
         color: var(--brand);
+        transform: translateY(-2px);
+      }
+      .navlinks a:focus-visible::after,
+      .mobile-nav a:focus-visible::after,
+      .mobile-nav a:active::after {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .navlinks a:hover {
+          color: var(--brand);
+          transform: translateY(-2px);
+        }
+        .navlinks a:hover::after {
+          opacity: 1;
+          transform: scaleX(1);
+        }
       }
       .nav-right {
         display: flex;
@@ -260,15 +315,29 @@
       }
       .currency {
         border: 1px solid var(--edge);
-        background: transparent;
+        background: var(--surface);
         color: var(--text);
         border-radius: 99px;
-        padding: 10px 15px;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        max-width: 86px;
+        padding: 8px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        width: auto;
         cursor: pointer;
+        transition:
+          border-color 0.2s,
+          background-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .currency:hover,
+      .currency:focus-visible {
+        border-color: var(--brand);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(199, 178, 153, 0.25);
+      }
+      .currency option {
+        background: var(--surface);
+        color: var(--text);
       }
       .cart-button {
         position: relative;
@@ -978,10 +1047,46 @@
         gap: 75px;
         align-items: center;
       }
+      .location-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 99px;
+        background: var(--surface);
+        border: 1px solid var(--edge);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--brand);
+        letter-spacing: 0.03em;
+        margin-bottom: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      .status-pulse {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+        animation: pulseGreen 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      @keyframes pulseGreen {
+        0% {
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+        }
+      }
       .location-left h2 {
         font: 400 clamp(40px, 4.2vw, 68px)/1.13 var(--display);
         letter-spacing: -0.052em;
-        margin: 22px 0;
+        margin: 18px 0;
       }
       .location-left > p {
         font-size: 13px;
@@ -1003,10 +1108,28 @@
         font-size: 12px;
         line-height: 1.7;
       }
-      .location-line .ico {
-        width: 20px;
-        height: 20px;
+      .location-icon-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--surface);
+        border: 1px solid var(--edge);
+        flex-shrink: 0;
         color: var(--brand);
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease;
+      }
+      .location-line:hover .location-icon-box {
+        transform: translateY(-2px);
+        border-color: var(--brand);
+      }
+      .location-line .ico {
+        width: 18px;
+        height: 18px;
       }
       .location-line strong {
         display: block;
@@ -1016,6 +1139,217 @@
       .location-line span {
         color: var(--muted);
       }
+      .location-coords-badge {
+        display: inline-block;
+        margin-left: 6px;
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: rgba(199, 178, 153, 0.15);
+        color: var(--brand);
+        font-family: monospace;
+        font-weight: 600;
+      }
+      .location-hours-box {
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* Subventana de horarios */
+      .hours-popover-wrapper {
+        position: relative;
+        display: inline-block;
+        max-width: 100%;
+        margin-top: 5px;
+      }
+      .hours-trigger-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 14px;
+        background: var(--surface);
+        border: 1px solid var(--edge);
+        border-radius: 8px;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 11px;
+        cursor: pointer;
+        text-align: left;
+        transition:
+          border-color 0.2s,
+          background-color 0.2s,
+          box-shadow 0.2s;
+        width: 100%;
+        max-width: 360px;
+      }
+      .hours-trigger-btn:hover,
+      .hours-popover-wrapper.active .hours-trigger-btn {
+        border-color: var(--brand);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      }
+      .hours-trigger-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+      .hours-trigger-label strong {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .hours-trigger-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--brand);
+        flex-shrink: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .hours-trigger-badge .ico {
+        width: 12px;
+        height: 12px;
+        transition: transform 0.2s ease;
+      }
+      .hours-popover-wrapper.active .hours-trigger-badge .ico {
+        transform: rotate(90deg);
+      }
+      .hours-popover-card {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        z-index: 40;
+        width: 310px;
+        max-width: calc(100vw - 48px);
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 12px;
+        padding: 16px 18px;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14);
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+        pointer-events: none;
+        visibility: hidden;
+        transition:
+          opacity 0.22s ease,
+          transform 0.22s ease,
+          visibility 0.22s ease;
+      }
+      .hours-popover-wrapper.active .hours-popover-card {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+        visibility: visible;
+      }
+      .hours-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--edge);
+      }
+      .hours-card-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+      .hours-card-title .ico {
+        width: 15px;
+        height: 15px;
+        color: var(--brand);
+      }
+      .hours-tag-orientativo {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: rgba(199, 178, 153, 0.2);
+        color: var(--brand);
+        padding: 2px 7px;
+        border-radius: 4px;
+      }
+      .hours-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 12px 0;
+        display: grid;
+        gap: 8px;
+        font-size: 11px;
+      }
+      .hours-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2px 0;
+      }
+      .hours-days {
+        font-weight: 500;
+        color: var(--text);
+      }
+      .hours-item.muted .hours-days {
+        color: var(--muted);
+      }
+      .hours-time {
+        font-weight: 700;
+        color: var(--brand);
+        font-variant-numeric: tabular-nums;
+      }
+      .hours-item.muted .hours-time {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .hours-card-footer {
+        padding-top: 10px;
+        border-top: 1px dashed var(--edge);
+        font-size: 10px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .hours-card-footer p {
+        margin: 0 0 10px 0;
+      }
+      .hours-wa-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 6px;
+        background: #25d366;
+        color: #fff;
+        border: none;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .hours-wa-btn:hover {
+        background: #1eb956;
+        transform: translateY(-1px);
+      }
+      .hours-wa-btn .ico {
+        width: 14px;
+        height: 14px;
+      }
+
       .location-actions {
         display: flex;
         gap: 10px;
@@ -1024,17 +1358,67 @@
       .map-card {
         position: relative;
         min-height: 470px;
-        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08);
         background: #dadbd5;
         overflow: hidden;
-        border: 7px solid var(--surface);
+        border: 6px solid var(--surface);
+        border-radius: 12px;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .map-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
+        border-color: var(--brand);
+      }
+      .map-overlay-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 5;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 12px;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        pointer-events: none;
+      }
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+        animation: pulseRed 2s infinite;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      @keyframes pulseRed {
+        0% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+        }
       }
       .map-card iframe {
         width: 100%;
         height: 470px;
         border: 0;
         display: block;
-        filter: saturate(0.69);
+        filter: saturate(0.85);
         transition: filter 0.3s;
       }
       .map-card:hover iframe {
@@ -1044,10 +1428,12 @@
         position: absolute;
         bottom: 20px;
         left: 20px;
-        background: #fff;
-        color: #343630;
-        box-shadow: 0 10px 30px #0002;
-        padding: 13px 16px;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--edge);
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 12px 16px;
         font-size: 11px;
         font-weight: 700;
         max-width: calc(100% - 40px);
@@ -1056,7 +1442,7 @@
       .map-marker-label small {
         display: block;
         font-size: 9px;
-        color: #777;
+        color: var(--muted);
         margin-top: 4px;
         font-weight: 500;
       }
@@ -1233,33 +1619,131 @@
         cursor: pointer;
         padding: 0;
       }
+      .whatsapp-float,
+      .backtop {
+        --float-right: calc(24px + env(safe-area-inset-right, 0px));
+        --float-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        --whatsapp-size: 56px;
+      }
       .whatsapp-float {
         position: fixed;
-        right: 26px;
-        bottom: 25px;
+        right: var(--float-right);
+        bottom: var(--float-bottom);
         z-index: 46;
-        width: 53px;
-        height: 53px;
+        width: var(--whatsapp-size);
+        height: var(--whatsapp-size);
+        padding: 14px;
         border-radius: 50%;
         display: grid;
         place-items: center;
-        border: 0;
+        border: 1px solid #ffffff38;
         background: #2b7c55;
-        color: white;
-        box-shadow: 0 9px 24px #0a241c4a;
-        transition: transform 0.2s;
+        color: #fff;
+        box-shadow:
+          0 8px 22px #0a241c38,
+          inset 0 1px 0 #ffffff24;
+        isolation: isolate;
+        transition:
+          transform 0.2s ease,
+          background-color 0.2s ease,
+          box-shadow 0.2s ease;
       }
-      .whatsapp-float:hover {
-        transform: translateY(-4px);
+      .whatsapp-float::before,
+      .whatsapp-float::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        z-index: -1;
+        border: 1px solid #2b7c5566;
+        border-radius: 46% 54% 58% 42% / 48% 42% 58% 52%;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .whatsapp-float:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 5px;
+        background: #236b48;
       }
       .whatsapp-float .ico {
-        height: 27px;
-        width: 27px;
+        height: 28px;
+        width: 28px;
+        fill: currentColor;
+        stroke: none;
+        pointer-events: none;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .whatsapp-float {
+          animation: whatsapp-enter 0.45s ease-out;
+        }
+        .whatsapp-float .ico {
+          animation: whatsapp-icon-enter 0.45s ease-out;
+        }
+        .whatsapp-float::before {
+          animation: whatsapp-ripple 0.85s 0.15s ease-out;
+        }
+        .whatsapp-float:focus-visible {
+          transform: translateY(-2px);
+        }
+        .whatsapp-float:focus-visible::after,
+        .whatsapp-float:active::after {
+          animation: whatsapp-ripple 0.7s ease-out;
+        }
+        .whatsapp-float:active {
+          transform: scale(0.97);
+        }
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .whatsapp-float:hover {
+          background: #236b48;
+          box-shadow:
+            0 10px 26px #0a241c48,
+            inset 0 1px 0 #ffffff24;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          .whatsapp-float:hover {
+            transform: translateY(-2px);
+          }
+          .whatsapp-float:hover::after {
+            animation: whatsapp-ripple 0.7s ease-out;
+          }
+          .whatsapp-float:active {
+            transform: scale(0.97);
+          }
+        }
+      }
+      @keyframes whatsapp-enter {
+        from {
+          opacity: 0.65;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes whatsapp-icon-enter {
+        from {
+          transform: scale(0.9);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+      @keyframes whatsapp-ripple {
+        0% {
+          opacity: 0;
+          transform: scale(0.96) rotate(-8deg);
+        }
+        25% {
+          opacity: 0.55;
+        }
+        100% {
+          opacity: 0;
+          transform: scale(1.22) rotate(8deg);
+        }
       }
       .backtop {
         position: fixed;
-        right: 26px;
-        bottom: 87px;
+        right: calc(var(--float-right) + (var(--whatsapp-size) - 40px) / 2);
+        bottom: calc(var(--float-bottom) + var(--whatsapp-size) + 20px);
         z-index: 45;
         width: 40px;
         height: 40px;
@@ -1958,9 +2442,9 @@
           display: none;
         }
         .currency {
-          max-width: 70px;
-          font-size: 9px;
-          padding: 9px 6px;
+          max-width: none;
+          font-size: 10px;
+          padding: 6px 10px;
         }
         .hero {
           height: calc(100svh - 94px);
@@ -2221,15 +2705,18 @@
           flex-direction: column;
           line-height: 1.7;
         }
-        .whatsapp-float {
-          width: 48px;
-          height: 48px;
-          right: 16px;
-          bottom: 17px;
-        }
+        .whatsapp-float,
         .backtop {
-          right: 19px;
-          bottom: 75px;
+          --float-right: calc(18px + env(safe-area-inset-right, 0px));
+          --float-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+          --whatsapp-size: 50px;
+        }
+        .whatsapp-float {
+          padding: 12px;
+        }
+        .whatsapp-float .ico {
+          height: 26px;
+          width: 26px;
         }
         .quick-layout {
           grid-template-columns: 1fr;
@@ -2275,7 +2762,7 @@
           padding: 20px;
         }
         .toast {
-          bottom: 78px;
+          bottom: calc(148px + env(safe-area-inset-bottom, 0px));
         }
       }
       @media (max-width: 390px) {
@@ -2308,6 +2795,14 @@
         .contact-title,
         .location-left h2 {
           font-size: 40px;
+        }
+        .hours-trigger-btn {
+          padding: 7px 10px;
+          font-size: 10px;
+        }
+        .hours-popover-card {
+          width: 280px;
+          padding: 14px 15px;
         }
         .order-form {
           grid-template-columns: 1fr;
@@ -2351,6 +2846,28 @@
         .reveal {
           opacity: 1;
           transform: none;
+        }
+        .navlinks a,
+        .navlinks a:hover,
+        .navlinks a:focus-visible,
+        .mobile-nav a,
+        .mobile-nav a:active,
+        .mobile-nav a:focus-visible,
+        .navlinks a::after,
+        .mobile-nav a::after {
+          transform: none;
+          transition: none !important;
+        }
+        .whatsapp-float,
+        .whatsapp-float:hover,
+        .whatsapp-float:focus-visible,
+        .whatsapp-float:active,
+        .whatsapp-float .ico,
+        .whatsapp-float::before,
+        .whatsapp-float::after {
+          animation: none !important;
+          transform: none;
+          transition: none !important;
         }
       }
     </style>
@@ -2444,6 +2961,12 @@
           d="M8.4 8.2c.2-.5.6-.5.8-.5h.6l1.1 2c.1.3.1.5-.1.7l-.7.8a8 8 0 0 0 3.1 3l.8-.7c.3-.2.5-.2.8-.1l2 .9c.3.2.3.5.2.9-.2.8-1.4 1.4-2.2 1.4-3.7 0-7.8-4.5-7.8-7.2 0-.8.7-1.8 1.4-2.2Z"
         ></path>
       </symbol>
+      <symbol id="i-whatsapp-brand" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.421q-.015 0-.03 0a9.88 9.88 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"
+        ></path>
+      </symbol>
     </svg>
 
     <div class="topline">
@@ -2479,8 +3002,8 @@
             id="currency"
             aria-label="Moneda para visualizar precios"
           >
-            <option value="BOB">Bs BOB</option>
-            <option value="USD">$ USD</option>
+            <option value="BOB">Bolivianos (Bs)</option>
+            <option value="USD">Dólares ($ USD)</option>
           </select>
           <button
             class="icon-button"
@@ -2888,43 +3411,127 @@
       <section class="location" id="ubicacion">
         <div class="shell location-grid">
           <div class="location-left reveal">
-            <p class="eyebrow">Estamos más cerca</p>
+            <div class="location-badge">
+              <span class="status-pulse" aria-hidden="true"></span>
+              <span>Showroom & Punto de atención</span>
+            </div>
             <h2>
               Ven a imaginar
               <br />
               <em>tu próximo hogar.</em>
             </h2>
             <p>
-              El mapa es interactivo y muestra La Paz como referencia inicial.
-              Configura la dirección real de MARVI para activar indicaciones
-              exactas.
+              Visítanos en nuestro showroom en La Paz para apreciar de cerca las
+              texturas, maderas y acabados de cada colección. Nuestro equipo te
+              asesorará en cada detalle.
             </p>
             <div class="location-meta">
               <div class="location-line">
-                <svg class="ico">
-                  <use href="#i-pin"></use>
-                </svg>
+                <div class="location-icon-box">
+                  <svg class="ico">
+                    <use href="#i-pin"></use>
+                  </svg>
+                </div>
                 <div>
                   <strong>Ubicación</strong>
-                  <span id="shopAddress">
-                    La Paz, Bolivia · ubicación referencial
+                  <span id="shopAddress">La Paz, Bolivia</span>
+                  <span class="location-coords-badge">
+                    Coord: -16.4867, -68.1579
                   </span>
                 </div>
               </div>
               <div class="location-line">
-                <svg class="ico">
-                  <use href="#i-clock"></use>
-                </svg>
-                <div>
+                <div class="location-icon-box">
+                  <svg class="ico">
+                    <use href="#i-clock"></use>
+                  </svg>
+                </div>
+                <div class="location-hours-box">
                   <strong>Visitas y horarios</strong>
-                  <span id="shopHours">
-                    Consulta disponibilidad antes de visitar
-                  </span>
+                  <div class="hours-popover-wrapper" id="hoursPopover">
+                    <button
+                      type="button"
+                      class="hours-trigger-btn"
+                      id="hoursTrigger"
+                      aria-expanded="false"
+                      aria-controls="hoursPopoverCard"
+                      aria-haspopup="dialog"
+                    >
+                      <span class="hours-trigger-label">
+                        <span class="status-pulse" aria-hidden="true"></span>
+                        <strong id="shopHours">
+                          L-V: 10:00–19:00 · Sáb: 10:00–13:00
+                        </strong>
+                      </span>
+                      <span class="hours-trigger-badge">
+                        Ver detalle
+                        <svg class="ico tiny">
+                          <use href="#i-arrow"></use>
+                        </svg>
+                      </span>
+                    </button>
+
+                    <div
+                      class="hours-popover-card"
+                      id="hoursPopoverCard"
+                      role="region"
+                      aria-label="Detalle de horarios de atención"
+                    >
+                      <div class="hours-card-header">
+                        <div class="hours-card-title">
+                          <svg class="ico">
+                            <use href="#i-clock"></use>
+                          </svg>
+                          <span>Horario de atención</span>
+                        </div>
+                        <span class="hours-tag-orientativo">Orientativo</span>
+                      </div>
+
+                      <ul class="hours-list">
+                        <li class="hours-item">
+                          <span class="hours-days">Lunes a viernes</span>
+                          <span class="hours-time">10:00 – 19:00</span>
+                        </li>
+                        <li class="hours-item">
+                          <span class="hours-days">Sábados</span>
+                          <span class="hours-time">10:00 – 13:00</span>
+                        </li>
+                        <li class="hours-item muted">
+                          <span class="hours-days">Domingos y feriados</span>
+                          <span class="hours-time">
+                            Consultar disponibilidad
+                          </span>
+                        </li>
+                      </ul>
+
+                      <div class="hours-card-footer">
+                        <p>
+                          Te recomendamos consultar disponibilidad o agendar tu
+                          visita antes de venir.
+                        </p>
+                        <button
+                          type="button"
+                          class="hours-wa-btn"
+                          id="hoursWaBtn"
+                        >
+                          <svg class="ico tiny">
+                            <use href="#i-whatsapp"></use>
+                          </svg>
+                          <span>Consultar por WhatsApp</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="location-actions">
-              <button class="btn btn-dark" type="button" id="directionsBtn">
+              <button
+                class="btn btn-dark"
+                type="button"
+                id="directionsBtn"
+                aria-label="Cómo llegar a MARVI en Google Maps"
+              >
                 Cómo llegar
                 <svg class="ico">
                   <use href="#i-arrow"></use>
@@ -2937,16 +3544,23 @@
           </div>
           <div>
             <div class="map-card reveal">
+              <div class="map-overlay-badge">
+                <span class="pulse-dot"></span>
+                <span>Ubicación MARVI</span>
+              </div>
               <iframe
-                title="Mapa interactivo referencial de La Paz, Bolivia"
+                title="Mapa de ubicación MARVI en La Paz, Bolivia"
                 loading="lazy"
                 referrerpolicy="no-referrer"
                 id="mapFrame"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-68.157%2C-16.525%2C-68.096%2C-16.475&layer=mapnik"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-68.163%2C-16.492%2C-68.153%2C-16.481&layer=mapnik&marker=-16.486659%2C-68.157926"
               ></iframe>
               <div class="map-marker-label" id="mapCaption">
-                LA PAZ · BOLIVIA
-                <small>Vista referencial, no marca una tienda real</small>
+                MARVI · SHOWROOM LA PAZ
+                <small>
+                  Coordenadas: -16.4867, -68.1579 · Pulsa «Cómo llegar» para
+                  navegar
+                </small>
               </div>
             </div>
             <div class="map-actions">
@@ -2954,8 +3568,8 @@
                 <use href="#i-pin"></use>
               </svg>
               <span id="mapSource">
-                Puedes ampliar y mover el mapa libremente · Datos de
-                OpenStreetMap
+                Mapa interactivo · Haz clic en «Cómo llegar» para abrir en
+                Google Maps
               </span>
             </div>
           </div>
@@ -3135,16 +3749,18 @@
         <use href="#i-arrow-up"></use>
       </svg>
     </button>
-    <button
+    <a
       class="whatsapp-float"
       id="waFloat"
-      type="button"
-      aria-label="Consultar por WhatsApp"
+      href="https://wa.me/59178998651?text=Hola%2C%20MARVI.%20Quisiera%20informaci%C3%B3n%20sobre%20sus%20muebles%20y%20precios."
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Consultar por WhatsApp al +591 78998651 (abre en una pestaña nueva)"
     >
-      <svg class="ico">
-        <use href="#i-whatsapp"></use>
+      <svg class="ico" aria-hidden="true" focusable="false">
+        <use href="#i-whatsapp-brand"></use>
       </svg>
-    </button>
+    </a>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <div inert class="overlay" id="cartOverlay" aria-hidden="true">
@@ -3677,7 +4293,7 @@
           `Bs ${new Intl.NumberFormat('es-BO', { maximumFractionDigits: 0 }).format(value)}`;
         const money = (value) =>
           currency === 'USD'
-            ? `US$ ${(value / settings.usdRate).toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            ? `$ ${(value / settings.usdRate).toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`
             : currencyBOB(value);
         const esc = (value) =>
           String(value).replace(
@@ -3740,8 +4356,8 @@
             : '<div class="empty-products"><h3>Sin coincidencias por aquí.</h3><p>Prueba otra búsqueda o elige otra categoría.</p><button class="btn btn-outline" id="emptyReset" type="button">Ver todos los muebles</button></div>';
           $('currencyNote').textContent =
             currency === 'USD'
-              ? `USD a tipo de cambio ilustrativo: 1 USD = Bs ${settings.usdRate.toFixed(2)}. Los pedidos y pagos se coordinan en bolivianos. No es una tasa en vivo.`
-              : 'Precios demostrativos expresados en bolivianos (Bs). Disponibilidad y costos de entrega sujetos a confirmación.';
+              ? `Precios en Dólares ($ USD) calculados al tipo de cambio referencial: 1 USD = Bs ${settings.usdRate.toFixed(2)}. Los pedidos se coordinan en Bolivianos (Bs).`
+              : `Precios expresados en Bolivianos (Bs). Tipo de cambio referencial: 1 USD = Bs ${settings.usdRate.toFixed(2)}.`;
         }
         function setCategory(cat) {
           category = cat;
@@ -3921,25 +4537,25 @@
             : 'WhatsApp · pendiente de configurar';
           $('contactEmail').textContent =
             settings.email || 'Correo · pendiente de configurar';
-          $('shopAddress').textContent =
-            settings.address || 'La Paz, Bolivia · ubicación referencial';
+          $('shopAddress').textContent = settings.address || 'La Paz, Bolivia';
           $('contactLocation').textContent =
-            settings.address || 'La Paz, Bolivia · referencia de demostración';
+            settings.address || 'La Paz, Bolivia · Showroom MARVI';
           $('shopHours').textContent =
-            settings.hours || 'Consulta disponibilidad antes de visitar';
+            settings.hours || 'L-V: 10:00–19:00 · Sáb: 10:00–13:00';
           $('mapCaption').innerHTML = settings.address
-            ? `${esc(settings.address)}<small>Consulta la dirección antes de visitar</small>`
-            : 'LA PAZ · BOLIVIA<small>Vista referencial, no marca una tienda real</small>';
+            ? `${esc(settings.address)}<small>Dirección configurada</small>`
+            : 'MARVI · SHOWROOM LA PAZ<small>Coordenadas: -16.4867, -68.1579 · Pulsa «Cómo llegar» para navegar</small>';
           const mapURL = settings.address
             ? `https://maps.google.com/maps?q=${encodeURIComponent(settings.address)}&output=embed`
-            : 'https://www.openstreetmap.org/export/embed.html?bbox=-68.157%2C-16.525%2C-68.096%2C-16.475&layer=mapnik';
+            : 'https://www.openstreetmap.org/export/embed.html?bbox=-68.163%2C-16.492%2C-68.153%2C-16.481&layer=mapnik&marker=-16.486659%2C-68.157926';
           if ($('mapFrame').getAttribute('src') !== mapURL)
             $('mapFrame').src = mapURL;
           $('mapFrame').title = settings.address
             ? `Mapa de la dirección configurada: ${settings.address}`
-            : 'Mapa interactivo referencial de La Paz, Bolivia';
-          $('mapSource').textContent =
-            `Puedes ampliar y mover el mapa libremente · Datos de ${settings.address ? 'Google Maps' : 'OpenStreetMap'}`;
+            : 'Mapa de ubicación MARVI en La Paz, Bolivia';
+          $('mapSource').textContent = settings.address
+            ? `Dirección personalizada · Datos de Google Maps`
+            : 'Mapa interactivo · Haz clic en «Cómo llegar» para abrir en Google Maps';
         }
         function showConfig() {
           $('cfgWhatsApp').value = settings.whatsapp;
@@ -4159,22 +4775,81 @@
         $('sendOrder').addEventListener('click', () =>
           openWhatsApp(preparedText),
         );
-        $('waFloat').addEventListener('click', () =>
-          openWhatsApp(
-            'Hola, MARVI. Quisiera información sobre sus muebles y precios.',
-          ),
-        );
         $('directionsBtn').addEventListener('click', () => {
-          if (!settings.address) {
-            notify('La dirección exacta de MARVI aún no está configurada.');
-            return;
-          }
-          window.open(
-            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address)}`,
-            '_blank',
-            'noopener,noreferrer',
-          );
+          const target = settings.address
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address)}`
+            : 'https://www.google.com/maps/search/?api=1&query=-16.486659,-68.157926';
+          window.open(target, '_blank', 'noopener,noreferrer');
         });
+
+        // Subventana de horarios (hover en PC, click en móvil, accesible)
+        const hoursWrapper = $('hoursPopover');
+        const hoursTrigger = $('hoursTrigger');
+        const hoursWaBtn = $('hoursWaBtn');
+        let hoursTimer;
+
+        function openHours() {
+          if (!hoursWrapper || !hoursTrigger) return;
+          clearTimeout(hoursTimer);
+          hoursWrapper.classList.add('active');
+          hoursTrigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeHours() {
+          if (!hoursWrapper || !hoursTrigger) return;
+          hoursWrapper.classList.remove('active');
+          hoursTrigger.setAttribute('aria-expanded', 'false');
+        }
+
+        if (hoursWrapper && hoursTrigger) {
+          hoursTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = hoursWrapper.classList.contains('active');
+            if (isOpen) {
+              closeHours();
+            } else {
+              openHours();
+            }
+          });
+
+          hoursWrapper.addEventListener('mouseenter', () => {
+            if (window.matchMedia('(hover: hover)').matches) {
+              openHours();
+            }
+          });
+          hoursWrapper.addEventListener('mouseleave', () => {
+            if (window.matchMedia('(hover: hover)').matches) {
+              clearTimeout(hoursTimer);
+              hoursTimer = setTimeout(closeHours, 280);
+            }
+          });
+
+          hoursWrapper.addEventListener('keydown', (e) => {
+            if (
+              e.key === 'Escape' &&
+              hoursWrapper.classList.contains('active')
+            ) {
+              e.stopPropagation();
+              closeHours();
+              hoursTrigger.focus();
+            }
+          });
+
+          document.addEventListener('click', (e) => {
+            if (!hoursWrapper.contains(e.target)) {
+              closeHours();
+            }
+          });
+
+          if (hoursWaBtn) {
+            hoursWaBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              openWhatsApp(
+                'Hola, MARVI. Quisiera consultar disponibilidad y horarios para visitar su showroom.',
+              );
+            });
+          }
+        }
         $('contactForm').addEventListener('submit', (e) => {
           e.preventDefault();
           const text = `Hola, MARVI. Mi nombre es ${$('contactName').value.trim()}.\nContacto: ${$('contactContact').value.trim()}\nTema: ${$('contactTopic').value}\nMensaje: ${$('contactMessage').value.trim()}`;

@@ -245,7 +245,7 @@ const {
       `Bs ${new Intl.NumberFormat('es-BO', { maximumFractionDigits: 0 }).format(value)}`;
     const money = (value) =>
       currency === 'USD'
-        ? `US$ ${(value / settings.usdRate).toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+        ? `$ ${(value / settings.usdRate).toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`
         : currencyBOB(value);
     const esc = (value) =>
       String(value).replace(
@@ -306,8 +306,8 @@ const {
         : '<div class="empty-products"><h3>Sin coincidencias por aquí.</h3><p>Prueba otra búsqueda o elige otra categoría.</p><button class="btn btn-outline" id="emptyReset" type="button">Ver todos los muebles</button></div>';
       $('currencyNote').textContent =
         currency === 'USD'
-          ? `USD a tipo de cambio ilustrativo: 1 USD = Bs ${settings.usdRate.toFixed(2)}. Los pedidos y pagos se coordinan en bolivianos. No es una tasa en vivo.`
-          : 'Precios demostrativos expresados en bolivianos (Bs). Disponibilidad y costos de entrega sujetos a confirmación.';
+          ? `Precios en Dólares ($ USD) calculados al tipo de cambio referencial: 1 USD = Bs ${settings.usdRate.toFixed(2)}. Los pedidos se coordinan en Bolivianos (Bs).`
+          : `Precios expresados en Bolivianos (Bs). Tipo de cambio referencial: 1 USD = Bs ${settings.usdRate.toFixed(2)}.`;
     }
     function setCategory(cat) {
       category = cat;
@@ -484,25 +484,25 @@ const {
         : 'WhatsApp · pendiente de configurar';
       $('contactEmail').textContent =
         settings.email || 'Correo · pendiente de configurar';
-      $('shopAddress').textContent =
-        settings.address || 'La Paz, Bolivia · ubicación referencial';
+      $('shopAddress').textContent = settings.address || 'La Paz, Bolivia';
       $('contactLocation').textContent =
-        settings.address || 'La Paz, Bolivia · referencia de demostración';
+        settings.address || 'La Paz, Bolivia · Showroom MARVI';
       $('shopHours').textContent =
-        settings.hours || 'Consulta disponibilidad antes de visitar';
+        settings.hours || 'L-V: 10:00–19:00 · Sáb: 10:00–13:00';
       $('mapCaption').innerHTML = settings.address
-        ? `${esc(settings.address)}<small>Consulta la dirección antes de visitar</small>`
-        : 'LA PAZ · BOLIVIA<small>Vista referencial, no marca una tienda real</small>';
+        ? `${esc(settings.address)}<small>Dirección configurada</small>`
+        : 'MARVI · SHOWROOM LA PAZ<small>Coordenadas: -16.4867, -68.1579 · Pulsa «Cómo llegar» para navegar</small>';
       const mapURL = settings.address
         ? `https://maps.google.com/maps?q=${encodeURIComponent(settings.address)}&output=embed`
-        : 'https://www.openstreetmap.org/export/embed.html?bbox=-68.157%2C-16.525%2C-68.096%2C-16.475&layer=mapnik';
+        : 'https://www.openstreetmap.org/export/embed.html?bbox=-68.163%2C-16.492%2C-68.153%2C-16.481&layer=mapnik&marker=-16.486659%2C-68.157926';
       if ($('mapFrame').getAttribute('src') !== mapURL)
         $('mapFrame').src = mapURL;
       $('mapFrame').title = settings.address
         ? `Mapa de la dirección configurada: ${settings.address}`
-        : 'Mapa interactivo referencial de La Paz, Bolivia';
-      $('mapSource').textContent =
-        `Puedes ampliar y mover el mapa libremente · Datos de ${settings.address ? 'Google Maps' : 'OpenStreetMap'}`;
+        : 'Mapa de ubicación MARVI en La Paz, Bolivia';
+      $('mapSource').textContent = settings.address
+        ? `Dirección personalizada · Datos de Google Maps`
+        : 'Mapa interactivo · Haz clic en «Cómo llegar» para abrir en Google Maps';
     }
     function showConfig() {
       $('cfgWhatsApp').value = settings.whatsapp;
@@ -709,22 +709,78 @@ const {
     });
     $('copyOrder').addEventListener('click', () => copyText(preparedText));
     $('sendOrder').addEventListener('click', () => openWhatsApp(preparedText));
-    $('waFloat').addEventListener('click', () =>
-      openWhatsApp(
-        'Hola, MARVI. Quisiera información sobre sus muebles y precios.',
-      ),
-    );
     $('directionsBtn').addEventListener('click', () => {
-      if (!settings.address) {
-        notify('La dirección exacta de MARVI aún no está configurada.');
-        return;
-      }
-      window.open(
-        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address)}`,
-        '_blank',
-        'noopener,noreferrer',
-      );
+      const target = settings.address
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address)}`
+        : 'https://www.google.com/maps/search/?api=1&query=-16.486659,-68.157926';
+      window.open(target, '_blank', 'noopener,noreferrer');
     });
+
+    // Subventana de horarios (hover en PC, click en móvil, accesible)
+    const hoursWrapper = $('hoursPopover');
+    const hoursTrigger = $('hoursTrigger');
+    const hoursWaBtn = $('hoursWaBtn');
+    let hoursTimer;
+
+    function openHours() {
+      if (!hoursWrapper || !hoursTrigger) return;
+      clearTimeout(hoursTimer);
+      hoursWrapper.classList.add('active');
+      hoursTrigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeHours() {
+      if (!hoursWrapper || !hoursTrigger) return;
+      hoursWrapper.classList.remove('active');
+      hoursTrigger.setAttribute('aria-expanded', 'false');
+    }
+
+    if (hoursWrapper && hoursTrigger) {
+      hoursTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = hoursWrapper.classList.contains('active');
+        if (isOpen) {
+          closeHours();
+        } else {
+          openHours();
+        }
+      });
+
+      hoursWrapper.addEventListener('mouseenter', () => {
+        if (window.matchMedia('(hover: hover)').matches) {
+          openHours();
+        }
+      });
+      hoursWrapper.addEventListener('mouseleave', () => {
+        if (window.matchMedia('(hover: hover)').matches) {
+          clearTimeout(hoursTimer);
+          hoursTimer = setTimeout(closeHours, 280);
+        }
+      });
+
+      hoursWrapper.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && hoursWrapper.classList.contains('active')) {
+          e.stopPropagation();
+          closeHours();
+          hoursTrigger.focus();
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!hoursWrapper.contains(e.target)) {
+          closeHours();
+        }
+      });
+
+      if (hoursWaBtn) {
+        hoursWaBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openWhatsApp(
+            'Hola, MARVI. Quisiera consultar disponibilidad y horarios para visitar su showroom.',
+          );
+        });
+      }
+    }
     $('contactForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const text = `Hola, MARVI. Mi nombre es ${$('contactName').value.trim()}.\nContacto: ${$('contactContact').value.trim()}\nTema: ${$('contactTopic').value}\nMensaje: ${$('contactMessage').value.trim()}`;

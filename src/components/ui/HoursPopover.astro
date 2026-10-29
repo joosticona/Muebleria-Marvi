@@ -1,0 +1,66 @@
+---
+import Icon from '../common/Icon.astro';
+
+const { id = 'hoursPopover' } = Astro.props;
+---
+
+<div class="hours-popover-wrapper" id={id}>
+  <button
+    type="button"
+    class="hours-trigger-btn"
+    id="hoursTrigger"
+    aria-expanded="false"
+    aria-controls="hoursPopoverCard"
+    aria-haspopup="dialog"
+  >
+    <span class="hours-trigger-label">
+      <span class="status-pulse" aria-hidden="true"></span>
+      <strong id="shopHours">L-V: 10:00–19:00 · Sáb: 10:00–13:00</strong>
+    </span>
+    <span class="hours-trigger-badge">
+      Ver detalle
+      <Icon name="arrow" size="tiny" />
+    </span>
+  </button>
+
+  <div
+    class="hours-popover-card"
+    id="hoursPopoverCard"
+    role="region"
+    aria-label="Detalle de horarios de atención"
+  >
+    <div class="hours-card-header">
+      <div class="hours-card-title">
+        <Icon name="clock" />
+        <span>Horario de atención</span>
+      </div>
+      <span class="hours-tag-orientativo">Orientativo</span>
+    </div>
+
+    <ul class="hours-list">
+      <li class="hours-item">
+        <span class="hours-days">Lunes a viernes</span>
+        <span class="hours-time">10:00 – 19:00</span>
+      </li>
+      <li class="hours-item">
+        <span class="hours-days">Sábados</span>
+        <span class="hours-time">10:00 – 13:00</span>
+      </li>
+      <li class="hours-item muted">
+        <span class="hours-days">Domingos y feriados</span>
+        <span class="hours-time">Consultar disponibilidad</span>
+      </li>
+    </ul>
+
+    <div class="hours-card-footer">
+      <p>
+        Te recomendamos consultar disponibilidad o agendar tu visita antes de
+        venir.
+      </p>
+      <button type="button" class="hours-wa-btn" id="hoursWaBtn">
+        <Icon name="whatsapp" size="tiny" />
+        <span>Consultar por WhatsApp</span>
+      </button>
+    </div>
+  </div>
+</div>
