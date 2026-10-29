@@ -1,0 +1,36 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+---
+
+<section class="hero" id="inicio" aria-label="Bienvenidos a MARVI">
+  <div class="hero-bg"></div>
+  <div class="shell hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">Bienvenido a tu próximo espacio favorito</p>
+      <h1 class="hero-title">
+        El arte de
+        <br />
+        sentirte <em>en</em>
+        <br />
+        <em>casa.</em>
+      </h1>
+      <p class="hero-description">
+        Piezas que inspiran, texturas que abrazan y detalles que hacen único
+        cada rincón. Descubre una nueva forma de habitar tus espacios.
+      </p>
+      <Button href="#catalogo" variant="light">
+        Explorar colección <Icon name="arrow" />
+      </Button>
+    </div>
+    <div class="hero-aside">
+      <div class="line"></div>
+      <p>
+        Menos ruido.
+        <br />
+        Más hogar.
+      </p>
+    </div>
+    <div class="hero-bottom">Diseñado para tu vida</div>
+  </div>
+</section>

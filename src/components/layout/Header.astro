@@ -1,0 +1,81 @@
+---
+import Icon from '../common/Icon.astro';
+
+const navLinks = [
+  { href: '#colecciones', label: 'Colecciones' },
+  { href: '#catalogo', label: 'Catálogo' },
+  { href: '#nosotros', label: 'Nosotros' },
+  { href: '#ubicacion', label: 'Ubicación' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+
+<div class="topline">
+  DISEÑO QUE TRANSFORMA <span class="dot"></span> MUEBLES PARA VIVIR MEJOR{' '}
+  <span class="dot"></span> MARVI
+</div>
+<header class="header" id="siteHeader">
+  <div class="shell navbar">
+    <a href="#inicio" class="brand" aria-label="MARVI, ir al inicio">
+      <span class="brand-name">MARVI</span>
+      <span class="brand-caption">MUEBLES & DISEÑO</span>
+    </a>
+    <nav class="navlinks" aria-label="Navegación principal">
+      {navLinks.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </nav>
+    <div class="nav-right">
+      <button
+        class="icon-button search-trigger"
+        id="searchHeader"
+        type="button"
+        aria-label="Buscar productos"
+      >
+        <Icon name="search" />
+      </button>
+      <select
+        class="currency"
+        id="currency"
+        aria-label="Moneda para visualizar precios"
+      >
+        <option value="BOB">Bs BOB</option>
+        <option value="USD">$ USD</option>
+      </select>
+      <button
+        class="icon-button"
+        id="themeToggle"
+        type="button"
+        aria-label="Cambiar a modo oscuro"
+      >
+        <Icon name="moon" />
+      </button>
+      <button
+        class="icon-button cart-button"
+        id="openCart"
+        type="button"
+        aria-label="Abrir carrito"
+      >
+        <Icon name="bag" />
+        <span class="cart-badge" id="cartCount">
+          0
+        </span>
+      </button>
+      <button
+        class="icon-button hamburger"
+        id="menuToggle"
+        type="button"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="mobileNav"
+      >
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+  <nav inert class="mobile-nav" id="mobileNav" aria-label="Navegación móvil">
+    {navLinks.map((link) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
+  </nav>
+</header>

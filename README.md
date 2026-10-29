@@ -1,6 +1,6 @@
 # MARVI · Mueblería — Sitio web en Astro
 
-Plantilla moderna para una mueblería, con aspecto editorial, responsive y funcionalidades interactivas. **La página principal concentra el HTML, CSS y JavaScript en un único archivo:** `src/pages/index.astro`.
+Plantilla moderna para una mueblería, con aspecto editorial, responsive y funcionalidades interactivas. Construida con una arquitectura modular de componentes reutilizables en Astro según las pautas de [AGENTS.md](./AGENTS.md).
 
 ## Qué contiene
 
@@ -82,11 +82,23 @@ Los cambios hechos desde la interfaz de configuración se guardan solo en ese na
 ```text
 MARVI-Astro/
 ├── src/
-│   └── pages/
-│       └── index.astro  ← todo el HTML, CSS y JavaScript
+│   ├── components/
+│   │   ├── common/      ← Icon, Button, SectionHead, SvgSprite
+│   │   ├── layout/      ← Header, Footer
+│   │   ├── modals/      ← CartDrawer, QuickViewModal, OrderModal, ConfigModal
+│   │   ├── scripts/     ← StoreScript (lógica de catálogo, carrito y estado)
+│   │   ├── sections/    ← Hero, Features, Collections, Intro, Catalog, Banner, Journey, Location, Contact
+│   │   └── ui/          ← FloatActions (BackTop, WhatsAppFloat, Toast)
+│   ├── layouts/
+│   │   └── Layout.astro ← Layout principal con metadatos, fuentes y estructura
+│   ├── pages/
+│   │   └── index.astro  ← Página principal ensamblada con componentes reutilizables
+│   └── styles/
+│       └── global.css   ← Estilos globales del sistema de diseño
 ├── astro.config.mjs
 ├── package.json
-├── preview.html    ← versión HTML directa
+├── preview.html         ← Versión HTML directa independiente
+├── AGENTS.md
 └── README.md
 ```
 

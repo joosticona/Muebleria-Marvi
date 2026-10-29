@@ -1,0 +1,55 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+---
+
+<div inert class="overlay modal-shell" id="configOverlay" aria-hidden="true">
+  <div
+    class="modal settings-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="configTitle"
+  >
+    <button
+      class="modal-close"
+      type="button"
+      data-close="configOverlay"
+      aria-label="Cerrar configuración"
+    >
+      <Icon name="close" />
+    </button>
+    <h2 id="configTitle">Configurar MARVI</h2>
+    <p>
+      Para probar esta plantilla, ingresa los datos reales del negocio. Los
+      cambios se guardan <strong>solo en este navegador</strong>; para
+      publicarlos a todos los clientes, edita la configuración en el código.
+    </p>
+    <form id="configForm">
+      <div class="field">
+        <label for="cfgWhatsApp">
+          WhatsApp del negocio (con 591, sin + ni espacios)
+        </label>
+        <input
+          id="cfgWhatsApp"
+          inputmode="tel"
+          placeholder="Ejemplo: 5917XXXXXXX"
+        />
+      </div>
+      <div class="field">
+        <label for="cfgEmail">Correo del negocio</label>
+        <input id="cfgEmail" type="email" placeholder="ventas@tudominio.com" />
+      </div>
+      <div class="field">
+        <label for="cfgAddress">Dirección real de tienda</label>
+        <input id="cfgAddress" placeholder="Av., calle, zona, ciudad..." />
+      </div>
+      <div class="field">
+        <label for="cfgHours">Horario real</label>
+        <input id="cfgHours" placeholder="Ej.: Lun–Sáb de 09:00 a 18:00" />
+      </div>
+      <Button variant="dark" block type="submit">
+        Guardar datos en este navegador
+      </Button>
+    </form>
+  </div>
+</div>

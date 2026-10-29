@@ -1,0 +1,84 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+---
+
+<section class="contact" id="contacto">
+  <div class="shell contact-layout">
+    <div class="contact-left reveal">
+      <p class="eyebrow">Conversemos</p>
+      <h2 class="contact-title">
+        Hagamos
+        <br />
+        espacio para
+        <br />
+        <em>tus ideas.</em>
+      </h2>
+      <p>
+        ¿Tienes una pregunta sobre medidas, materiales o un pedido especial?
+        Cuéntanos qué buscas y prepara tu mensaje.
+      </p>
+      <div class="contact-line">
+        <Icon name="whatsapp" />
+        <span id="contactPhone">WhatsApp · pendiente de configurar</span>
+      </div>
+      <div class="contact-line">
+        <Icon name="mail" />
+        <span id="contactEmail">Correo · pendiente de configurar</span>
+      </div>
+      <div class="contact-line">
+        <Icon name="pin" />
+        <span id="contactLocation">
+          La Paz, Bolivia · referencia de demostración
+        </span>
+      </div>
+    </div>
+    <form class="contact-form reveal" id="contactForm">
+      <div class="field">
+        <label for="contactName">Tu nombre *</label>
+        <input
+          id="contactName"
+          name="name"
+          autocomplete="name"
+          placeholder="¿Cómo te llamas?"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="contactContact">WhatsApp o correo *</label>
+        <input
+          id="contactContact"
+          name="contact"
+          placeholder="Tu contacto"
+          required
+        />
+      </div>
+      <div class="field full">
+        <label for="contactTopic">¿En qué podemos ayudarte?</label>
+        <select id="contactTopic">
+          <option>Consulta sobre un mueble</option>
+          <option>Pedido personalizado</option>
+          <option>Información de entregas</option>
+          <option>Visitar la tienda</option>
+          <option>Otra consulta</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label for="contactMessage">Tu mensaje *</label>
+        <textarea
+          id="contactMessage"
+          rows="5"
+          placeholder="Cuéntanos qué tienes en mente..."
+          required
+        ></textarea>
+      </div>
+      <Button variant="dark" type="submit">
+        Preparar consulta <Icon name="arrow" />
+      </Button>
+      <p class="form-hint">
+        Esta versión de muestra prepara tu mensaje para WhatsApp. No envía datos
+        a un servidor.
+      </p>
+    </form>
+  </div>
+</section>

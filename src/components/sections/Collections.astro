@@ -1,0 +1,66 @@
+---
+import Icon from '../common/Icon.astro';
+import SectionHead from '../common/SectionHead.astro';
+
+const categories = [
+  {
+    number: '01 — Descubre',
+    category: 'Sala',
+    filter: 'Sofás',
+    image:
+      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=82',
+    alt: 'Sofá contemporáneo en sala luminosa',
+  },
+  {
+    number: '02 — Comparte',
+    category: 'Comedor',
+    filter: 'Mesas',
+    image:
+      'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=900&q=82',
+    alt: 'Comedor de líneas modernas',
+  },
+  {
+    number: '03 — Descansa',
+    category: 'Dormitorio',
+    filter: 'Dormitorio',
+    image:
+      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=82',
+    alt: 'Dormitorio sereno y acogedor',
+  },
+];
+---
+
+<section class="section" id="colecciones">
+  <div class="shell">
+    <SectionHead
+      eyebrow="Encuentra tu inspiración"
+      description="Un sofá donde pasan las mejores conversaciones. Una mesa que reúne. Un dormitorio que invita a descansar."
+    >
+      <h2 slot="title">
+        Un espacio para
+        <br />
+        <em>cada historia.</em>
+      </h2>
+    </SectionHead>
+    <div class="categories">
+      {categories.map((item) => (
+        <a
+          class="category-card reveal"
+          href="#catalogo"
+          data-go-category={item.filter}
+        >
+          <img src={item.image} alt={item.alt} loading="lazy" />
+          <div class="category-label">
+            <div>
+              <small>{item.number}</small>
+              <h3>{item.category}</h3>
+            </div>
+            <span class="circle-arrow">
+              <Icon name="arrow" size="tiny" />
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

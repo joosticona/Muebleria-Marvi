@@ -1,0 +1,76 @@
+---
+import Icon from '../common/Icon.astro';
+import SectionHead from '../common/SectionHead.astro';
+
+const filters = [
+  { id: 'Todos', label: 'Todos' },
+  { id: 'Sofás', label: 'Sofás' },
+  { id: 'Sillas', label: 'Sillas' },
+  { id: 'Mesas', label: 'Mesas' },
+  { id: 'Dormitorio', label: 'Dormitorio' },
+  { id: 'Almacenaje', label: 'Almacenaje' },
+  { id: 'Favoritos', label: '♥ Favoritos' },
+];
+---
+
+<section class="section catalog" id="catalogo">
+  <div class="shell">
+    <SectionHead
+      eyebrow="Catálogo · Colección de muestra"
+      description="Explora muebles que combinan estética y funcionalidad. Los productos, fotografías y precios son demostrativos."
+    >
+      <h2 slot="title">
+        Piezas para
+        <br />
+        <em>enamorarte.</em>
+      </h2>
+    </SectionHead>
+    <div class="catalog-toolbar">
+      <div class="filter-list" role="group" aria-label="Filtrar por categoría">
+        {filters.map((f, i) => (
+          <button
+            class={`filter ${i === 0 ? 'active' : ''}`}
+            type="button"
+            data-filter={f.id}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+      <div class="catalog-options">
+        <label class="catalog-search">
+          <Icon name="search" />
+          <input
+            id="productSearch"
+            placeholder="Buscar muebles..."
+            aria-label="Buscar muebles"
+            autocomplete="off"
+          />
+        </label>
+        <select
+          id="sortProducts"
+          class="sort-select"
+          aria-label="Ordenar productos"
+        >
+          <option value="featured">Destacados</option>
+          <option value="low">Precio: menor a mayor</option>
+          <option value="high">Precio: mayor a menor</option>
+          <option value="name">Nombre A–Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="catalog-status">
+      <span id="resultsCount" aria-live="polite">
+        Cargando colección...
+      </span>
+      <button class="reset-filter" id="clearFilters" type="button" hidden>
+        Limpiar filtros
+      </button>
+    </div>
+    <div class="products" id="productGrid" aria-live="polite"></div>
+    <p class="currency-note" id="currencyNote">
+      Precios demostrativos expresados en bolivianos (Bs). Disponibilidad y
+      costos de entrega sujetos a confirmación.
+    </p>
+  </div>
+</section>

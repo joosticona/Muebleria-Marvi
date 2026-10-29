@@ -1,0 +1,36 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+---
+
+<section class="banner">
+  <div class="banner-grid">
+    <div class="banner-text reveal">
+      <p class="eyebrow">Elige diferente · Vive mejor</p>
+      <h2>
+        Espacios que
+        <br />
+        se viven,{' '}
+        <em>
+          no
+          <br />
+          solo se miran.
+        </em>
+      </h2>
+      <p>
+        Hay muebles que decoran y otros que transforman la manera de vivir.
+        Encuentra esa pieza que lo cambia todo.
+      </p>
+      <Button href="#catalogo" variant="light">
+        Encuentra tu favorito <Icon name="arrow" />
+      </Button>
+    </div>
+    <div class="banner-image">
+      <img
+        src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1300&q=82"
+        alt="Sala contemporánea con muebles cuidadosamente seleccionados"
+        loading="lazy"
+      />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,117 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+---
+
+<div inert class="overlay modal-shell" id="orderOverlay" aria-hidden="true">
+  <div
+    class="modal order-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="orderTitle"
+  >
+    <button
+      class="modal-close"
+      type="button"
+      data-close="orderOverlay"
+      aria-label="Cerrar pedido"
+    >
+      <Icon name="close" />
+    </button>
+    <div id="orderCheckout">
+      <p class="eyebrow">Tu elección, tu espacio</p>
+      <h2 id="orderTitle">Prepara tu pedido.</h2>
+      <p>
+        Completa tus datos para generar un resumen. Se enviará a MARVI solo si
+        tú decides compartirlo; no hay cobros online.
+      </p>
+      <div class="order-summary">
+        <div class="order-summary-row">
+          <span id="orderCount">0 artículos</span>
+          <strong id="orderTotal">Bs 0</strong>
+        </div>
+      </div>
+      <form class="order-form" id="orderForm">
+        <div class="field">
+          <label for="orderName">Nombre completo *</label>
+          <input
+            id="orderName"
+            autocomplete="name"
+            required
+            placeholder="Tu nombre"
+          />
+        </div>
+        <div class="field">
+          <label for="orderPhone">WhatsApp / teléfono *</label>
+          <input
+            id="orderPhone"
+            autocomplete="tel"
+            inputmode="tel"
+            required
+            placeholder="Ej.: 7XXXXXXX"
+          />
+        </div>
+        <div class="field full">
+          <label for="deliveryMode">Modalidad *</label>
+          <select id="deliveryMode" required>
+            <option value="Cotizar entrega a domicilio">
+              Cotizar entrega a domicilio
+            </option>
+            <option value="Coordinar recojo en tienda">
+              Coordinar recojo en tienda
+            </option>
+          </select>
+        </div>
+        <div class="field full" id="deliveryAddressField">
+          <label for="deliveryAddress">Zona o dirección de entrega *</label>
+          <input
+            id="deliveryAddress"
+            placeholder="Ciudad, zona y referencia"
+            required
+          />
+        </div>
+        <div class="field full">
+          <label for="orderNotes">Notas adicionales</label>
+          <textarea
+            id="orderNotes"
+            rows="3"
+            placeholder="Color, material o preguntas sobre tu pedido..."
+          ></textarea>
+        </div>
+        <Button variant="dark" block type="submit">
+          Generar resumen del pedido <Icon name="arrow" />
+        </Button>
+      </form>
+    </div>
+    <div class="order-success" id="orderSuccess">
+      <div class="success-icon">
+        <Icon name="check" />
+      </div>
+      <p class="eyebrow" style="justify-content:center">
+        Pedido preparado
+      </p>
+      <h2 id="orderSuccessTitle" tabindex="-1">
+        ¡Tu espacio está
+        <br />
+        <em>más cerca!</em>
+      </h2>
+      <p id="orderSuccessText">
+        Tu resumen está listo. Para que la tienda reciba tu solicitud,
+        compártelo por WhatsApp.
+      </p>
+      <div
+        class="order-summary"
+        id="orderPreview"
+        style="text-align:left;white-space:pre-wrap;max-height:200px;overflow:auto"
+      ></div>
+      <div class="order-actions">
+        <Button variant="outline" type="button" id="copyOrder">
+          Copiar resumen
+        </Button>
+        <Button variant="dark" type="button" id="sendOrder">
+          <Icon name="whatsapp" /> Compartir por WhatsApp
+        </Button>
+      </div>
+    </div>
+  </div>
+</div>

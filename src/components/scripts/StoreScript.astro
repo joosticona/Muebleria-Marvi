@@ -1,0 +1,802 @@
+---
+const {
+  defaultStore = {
+    whatsapp: '',
+    email: '',
+    address: '',
+    hours: '',
+    city: 'La Paz, Bolivia',
+    usdRate: 6.96,
+  },
+} = Astro.props;
+---
+
+<script is:inline define:vars={{ initialStore: defaultStore }}>
+  (() => {
+    'use strict';
+    // Configuración base de la tienda (heredada de las propiedades del componente o personalizada)
+    const DEFAULT_STORE = initialStore || {
+      whatsapp: '',
+      email: '',
+      address: '',
+      hours: '',
+      city: 'La Paz, Bolivia',
+      usdRate: 6.96,
+    };
+    const PRODUCTS = [
+      {
+        id: 1,
+        name: 'Sofá Nórdico Aura',
+        cat: 'Sofás',
+        price: 5490,
+        old: 6200,
+        tag: 'Favorito',
+        material: 'Tela texturizada / madera',
+        size: '210 × 88 × 78 cm',
+        img: 'photo-1555041469-a586c61ea9bc',
+        desc: 'Líneas suaves, asiento generoso y una presencia que equilibra confort con carácter contemporáneo.',
+      },
+      {
+        id: 2,
+        name: 'Sillón Mía Lounge',
+        cat: 'Sillas',
+        price: 1890,
+        tag: 'Nuevo',
+        material: 'Tapiz premium / madera',
+        size: '78 × 82 × 80 cm',
+        img: 'photo-1567538096630-e0c55bd6374c',
+        desc: 'Un acento cómodo y expresivo para esa esquina donde siempre quieres volver.',
+      },
+      {
+        id: 3,
+        name: 'Mesa de Centro Oslo',
+        cat: 'Mesas',
+        price: 1790,
+        material: 'Madera natural',
+        size: '110 × 60 × 40 cm',
+        img: 'photo-1499933374294-4584851497cc',
+        desc: 'Una mesa versátil con espíritu escandinavo para compartir los pequeños momentos.',
+      },
+      {
+        id: 4,
+        name: 'Cama Siena Natural',
+        cat: 'Dormitorio',
+        price: 4790,
+        tag: 'Selección',
+        material: 'Madera / tapizado',
+        size: '160 × 200 cm (colchón)',
+        img: 'photo-1505693416388-ac5ce068fe85',
+        desc: 'La calma empieza aquí: una silueta serena diseñada para descansar con estilo.',
+      },
+      {
+        id: 5,
+        name: 'Butaca Cora',
+        cat: 'Sillas',
+        price: 2190,
+        material: 'Tela y estructura de madera',
+        size: '73 × 77 × 85 cm',
+        img: 'photo-1519947486511-46149fa0a254',
+        desc: 'Curvas contemporáneas y un abrazo de textura para cualquier ambiente.',
+      },
+      {
+        id: 6,
+        name: 'Comedor Arlo',
+        cat: 'Mesas',
+        price: 6490,
+        tag: 'Destacado',
+        material: 'Roble / terminación mate',
+        size: '180 × 90 × 76 cm',
+        img: 'photo-1617806118233-18e1de247200',
+        desc: 'Proporciones elegantes que convierten reuniones de todos los días en algo especial.',
+      },
+      {
+        id: 7,
+        name: 'Estante Lino',
+        cat: 'Almacenaje',
+        price: 2390,
+        material: 'Madera y acero',
+        size: '90 × 35 × 180 cm',
+        img: 'photo-1594620302200-9a762244a156',
+        desc: 'Orden visual, diseño ligero y espacio para esos objetos que cuentan tu historia.',
+      },
+      {
+        id: 8,
+        name: 'Sofá Modular Nube',
+        cat: 'Sofás',
+        price: 7690,
+        tag: 'Nuevo',
+        material: 'Tapizado texturizado / espuma',
+        size: '260 × 160 × 82 cm',
+        img: 'photo-1600210492486-724fe5c67fb0',
+        desc: 'Un sistema de descanso adaptable que combina una estética pura con mucho confort.',
+      },
+      {
+        id: 9,
+        name: 'Mesa Auxiliar Alba',
+        cat: 'Mesas',
+        price: 1290,
+        material: 'Madera maciza',
+        size: '50 × 50 × 52 cm',
+        img: 'photo-1538688423619-a81d3f23454b',
+        desc: 'Pequeña, esencial y de gran personalidad, perfecta para acompañar una buena lectura.',
+      },
+      {
+        id: 10,
+        name: 'Cómoda Oliva',
+        cat: 'Almacenaje',
+        price: 3590,
+        material: 'Madera con acabado natural',
+        size: '120 × 45 × 82 cm',
+        img: 'photo-1600607687920-4e2a09cf159d',
+        desc: 'Almacenaje práctico con líneas limpias para mantener cada cosa en su sitio.',
+      },
+      {
+        id: 11,
+        name: 'Silla Terra',
+        cat: 'Sillas',
+        price: 1290,
+        tag: 'Esencial',
+        material: 'Madera / tejido suave',
+        size: '52 × 56 × 80 cm',
+        img: 'photo-1503602642458-232111445657',
+        desc: 'Una silla de comedor con formas ligeras y equilibrio entre función y textura.',
+      },
+      {
+        id: 12,
+        name: 'Cabecera Bruma',
+        cat: 'Dormitorio',
+        price: 2890,
+        material: 'Madera y textil suave',
+        size: '160 × 110 cm',
+        img: 'photo-1616594039964-ae9021a400a0',
+        desc: 'Un detalle cálido que cambia la atmósfera de tu dormitorio.',
+      },
+    ];
+    const $ = (id) => document.getElementById(id);
+    document.documentElement.classList.add('js');
+    const memory = new Map();
+    const storage = {
+      getItem(key) {
+        if (memory.has(key)) return memory.get(key);
+        try {
+          return window.localStorage.getItem(key);
+        } catch {
+          return null;
+        }
+      },
+      setItem(key, value) {
+        memory.set(key, value);
+        try {
+          window.localStorage.setItem(key, value);
+        } catch {
+          // Mantener las preferencias de esta sesión si el navegador bloquea el almacenamiento.
+        }
+      },
+    };
+    const icon = (id) =>
+      `<svg class="ico" aria-hidden="true" focusable="false"><use href="#i-${id}"/></svg>`;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const scrollBehavior = () => (reducedMotion.matches ? 'instant' : 'smooth');
+    const imagePlaceholder = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#e6e2db"/><g fill="none" stroke="#78634f" stroke-width="5"><path d="M100 235v-65q0-15 15-15h170q15 0 15 15v65M90 215h220v55H90zM110 270v20m180-20v20"/></g><text x="200" y="330" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#5d4a39">Imagen no disponible</text></svg>')}`;
+    document.addEventListener(
+      'error',
+      (event) => {
+        const image = event.target;
+        if (!(image instanceof HTMLImageElement) || image.dataset.fallback)
+          return;
+        image.dataset.fallback = 'true';
+        image.classList.add('image-unavailable');
+        image.removeAttribute('srcset');
+        image.src = imagePlaceholder;
+      },
+      true,
+    );
+    const imageURL = (p, w = 760) =>
+      `https://images.unsplash.com/${p.img}?auto=format&fit=crop&w=${w}&q=82`;
+    const loadJSON = (key, fallback) => {
+      try {
+        return JSON.parse(storage.getItem(key)) ?? fallback;
+      } catch {
+        return fallback;
+      }
+    };
+    const saveJSON = (key, value) => {
+      try {
+        storage.setItem(key, JSON.stringify(value));
+      } catch {
+        // El almacenamiento puede estar bloqueado o sin espacio; continuar en memoria.
+      }
+    };
+    const storedSettings = loadJSON('marvi:settings', {});
+    const settings = { ...DEFAULT_STORE };
+    for (const key of ['whatsapp', 'email', 'address', 'hours', 'city']) {
+      if (typeof storedSettings?.[key] === 'string')
+        settings[key] = storedSettings[key];
+    }
+    const rate = Number(storedSettings?.usdRate);
+    if (Number.isFinite(rate) && rate > 0) settings.usdRate = rate;
+    const storedCart = loadJSON('marvi:cart', []);
+    let cart = (Array.isArray(storedCart) ? storedCart : [])
+      .filter(
+        (item) =>
+          item &&
+          PRODUCTS.some((p) => p.id === item.id) &&
+          Number.isInteger(item.qty) &&
+          item.qty > 0,
+      )
+      .map((item) => ({ id: item.id, qty: Math.min(item.qty, 99) }));
+    const storedFavorites = loadJSON('marvi:favorites', []);
+    let favorites = [
+      ...new Set(
+        (Array.isArray(storedFavorites) ? storedFavorites : []).filter((id) =>
+          PRODUCTS.some((p) => p.id === id),
+        ),
+      ),
+    ];
+    let currency = storage.getItem('marvi:currency') === 'USD' ? 'USD' : 'BOB';
+    let theme = storage.getItem('marvi:theme') === 'dark' ? 'dark' : 'light';
+    let category = 'Todos',
+      query = '',
+      sort = 'featured',
+      currentQuickId = null,
+      preparedText = '',
+      toastTimer;
+    const currencyBOB = (value) =>
+      `Bs ${new Intl.NumberFormat('es-BO', { maximumFractionDigits: 0 }).format(value)}`;
+    const money = (value) =>
+      currency === 'USD'
+        ? `US$ ${(value / settings.usdRate).toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+        : currencyBOB(value);
+    const esc = (value) =>
+      String(value).replace(
+        /[&<>"']/g,
+        (c) =>
+          ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+          })[c],
+      );
+    function notify(message) {
+      const el = $('toast');
+      el.textContent = message;
+      el.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('visible'), 4000);
+    }
+    function setTheme(value) {
+      theme = value;
+      document.body.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+      $('themeToggle').innerHTML = icon(theme === 'light' ? 'moon' : 'sun');
+      $('themeToggle').setAttribute(
+        'aria-label',
+        theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro',
+      );
+      storage.setItem('marvi:theme', theme);
+    }
+    function renderProducts() {
+      let list = PRODUCTS.filter(
+        (p) =>
+          (category === 'Todos' ||
+            (category === 'Favoritos'
+              ? favorites.includes(p.id)
+              : p.cat === category)) &&
+          `${p.name} ${p.cat} ${p.material}`
+            .toLowerCase()
+            .includes(query.toLowerCase()),
+      );
+      if (sort === 'low') list.sort((a, b) => a.price - b.price);
+      if (sort === 'high') list.sort((a, b) => b.price - a.price);
+      if (sort === 'name')
+        list.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+      $('resultsCount').textContent =
+        `Mostrando ${list.length} de ${PRODUCTS.length} productos`;
+      $('clearFilters').hidden =
+        category === 'Todos' && !query && sort === 'featured';
+      $('productGrid').innerHTML = list.length
+        ? list
+            .map(
+              (p) =>
+                `<article class="product-card"><div class="product-image"><img src="${imageURL(p)}" alt="Fotografía ilustrativa de ${esc(p.name)}" loading="lazy" decoding="async" width="760" height="855" sizes="(max-width: 680px) 50vw, (max-width: 1150px) 33vw, 25vw" srcset="${imageURL(p, 360)} 360w, ${imageURL(p, 760)} 760w"/>${p.tag ? `<span class="product-tag">${esc(p.tag)}</span>` : ''}<button class="heart ${favorites.includes(p.id) ? 'saved' : ''}" type="button" data-fav="${p.id}" aria-label="${favorites.includes(p.id) ? 'Quitar de' : 'Añadir a'} favoritos: ${esc(p.name)}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button><button class="quick-view" type="button" data-quick="${p.id}">Ver detalles</button></div><div class="product-details"><div class="product-kicker">${esc(p.cat)} · Colección MARVI</div><h3 class="product-name">${esc(p.name)}</h3><div class="product-foot"><span class="product-price">${money(p.price)}${p.old ? ` <s>${money(p.old)}</s>` : ''}</span><button class="add-button" type="button" data-add="${p.id}" aria-label="Añadir ${esc(p.name)} al carrito">${icon('plus')}</button></div></div></article>`,
+            )
+            .join('')
+        : '<div class="empty-products"><h3>Sin coincidencias por aquí.</h3><p>Prueba otra búsqueda o elige otra categoría.</p><button class="btn btn-outline" id="emptyReset" type="button">Ver todos los muebles</button></div>';
+      $('currencyNote').textContent =
+        currency === 'USD'
+          ? `USD a tipo de cambio ilustrativo: 1 USD = Bs ${settings.usdRate.toFixed(2)}. Los pedidos y pagos se coordinan en bolivianos. No es una tasa en vivo.`
+          : 'Precios demostrativos expresados en bolivianos (Bs). Disponibilidad y costos de entrega sujetos a confirmación.';
+    }
+    function setCategory(cat) {
+      category = cat;
+      document.querySelectorAll('[data-filter]').forEach((b) => {
+        const active = b.dataset.filter === cat;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+      renderProducts();
+    }
+    function renderCart() {
+      const sum = cart.reduce(
+        (acc, i) => acc + i.qty * PRODUCTS.find((p) => p.id === i.id).price,
+        0,
+      );
+      const qty = cart.reduce((acc, i) => acc + i.qty, 0);
+      $('cartCount').textContent = qty;
+      $('cartTopCount').textContent = `(${qty})`;
+      $('cartTotal').textContent = currencyBOB(sum);
+      $('checkoutBtn').disabled = !cart.length;
+      $('cartItems').innerHTML = cart.length
+        ? cart
+            .map((i) => {
+              const p = PRODUCTS.find((p) => p.id === i.id);
+              return `<article class="cart-item"><img src="${imageURL(p, 260)}" alt="${esc(p.name)}" loading="lazy" width="84" height="100"/><div><div class="cart-item-top"><div><p class="cart-item-title">${esc(p.name)}</p><div class="cart-item-category">${esc(p.cat)}</div></div><button class="remove-item" type="button" data-remove="${p.id}" aria-label="Quitar ${esc(p.name)}">${icon('close')}</button></div><span class="cart-item-price">${currencyBOB(p.price * i.qty)}</span><div class="qty-line"><div class="qty-ctrl"><button type="button" data-dec="${p.id}" aria-label="Reducir cantidad">−</button><span>${i.qty}</span><button type="button" data-inc="${p.id}" aria-label="Aumentar cantidad">+</button></div><span class="product-kicker">Unidad: ${currencyBOB(p.price)}</span></div></div></article>`;
+            })
+            .join('')
+        : `<div class="cart-empty">${icon('bag')}<h3>Tu carrito está esperando.</h3><p>Descubre la colección y elige tus piezas favoritas.</p><button class="btn btn-dark" type="button" id="shopFromCart">Explorar catálogo</button></div>`;
+      saveJSON('marvi:cart', cart);
+    }
+    function addCart(id) {
+      const p = PRODUCTS.find((p) => p.id === id);
+      if (!p) return;
+      const item = cart.find((i) => i.id === id);
+      if (item) item.qty = Math.min(item.qty + 1, 99);
+      else cart.push({ id, qty: 1 });
+      renderCart();
+      notify(`${p.name} se añadió a tu carrito`);
+    }
+    function mutateCart(id, mode) {
+      const item = cart.find((i) => i.id === id);
+      if (!item) return;
+      if (mode === 'remove') cart = cart.filter((i) => i.id !== id);
+      else {
+        item.qty += mode === 'inc' ? 1 : -1;
+        if (item.qty <= 0) cart = cart.filter((i) => i.id !== id);
+        if (item.qty > 99) item.qty = 99;
+      }
+      renderCart();
+      const control = $('cartItems').querySelector(`[data-${mode}="${id}"]`);
+      (control || $('cartOverlay').querySelector('[data-close]')).focus({
+        preventScroll: true,
+      });
+    }
+    function toggleFavorite(id) {
+      favorites = favorites.includes(id)
+        ? favorites.filter((x) => x !== id)
+        : [...favorites, id];
+      saveJSON('marvi:favorites', favorites);
+      renderProducts();
+      const favoriteButton = $('productGrid').querySelector(
+        `[data-fav="${id}"]`,
+      );
+      if (favoriteButton) favoriteButton.focus({ preventScroll: true });
+      else
+        document
+          .querySelector('[data-filter="Favoritos"]')
+          .focus({ preventScroll: true });
+      notify(
+        favorites.includes(id)
+          ? 'Guardado en tus favoritos'
+          : 'Quitado de tus favoritos',
+      );
+    }
+    let layerTrigger = null;
+    const backgroundElements = [...document.body.children].filter(
+      (el) =>
+        !el.classList.contains('overlay') &&
+        el.id !== 'toast' &&
+        el.tagName !== 'SCRIPT',
+    );
+    function openLayer(id) {
+      const previous = document.querySelector('.overlay.open');
+      if (previous && previous.id !== id) closeLayer(previous.id, false);
+      if (!layerTrigger) layerTrigger = document.activeElement;
+      setMenu(false);
+      const el = $(id);
+      el.inert = false;
+      el.classList.add('open');
+      el.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('locked');
+      backgroundElements.forEach((element) => {
+        element.inert = true;
+      });
+      setTimeout(
+        () => {
+          if (el.classList.contains('open'))
+            el.querySelector('[data-close]').focus({ preventScroll: true });
+        },
+        reducedMotion.matches ? 0 : 320,
+      );
+    }
+    function closeLayer(id, restoreFocus = true) {
+      const el = $(id);
+      if (el.contains(document.activeElement)) document.activeElement.blur();
+      el.classList.remove('open');
+      el.setAttribute('aria-hidden', 'true');
+      el.inert = true;
+      if (!document.querySelector('.overlay.open')) {
+        document.body.classList.remove('locked');
+        backgroundElements.forEach((element) => {
+          element.inert = false;
+        });
+        if (restoreFocus) {
+          if (layerTrigger?.isConnected)
+            layerTrigger.focus({ preventScroll: true });
+          layerTrigger = null;
+        }
+      }
+    }
+    function quickView(id) {
+      const p = PRODUCTS.find((p) => p.id === id);
+      if (!p) return;
+      currentQuickId = id;
+      delete $('quickImage').dataset.fallback;
+      $('quickImage').classList.remove('image-unavailable');
+      $('quickImage').src = imageURL(p, 1100);
+      $('quickImage').alt = `Fotografía ilustrativa de ${p.name}`;
+      $('quickCategory').textContent = `${p.cat} · Colección MARVI`;
+      $('quickTitle').textContent = p.name;
+      $('quickPrice').textContent = money(p.price);
+      $('quickDescription').textContent = p.desc;
+      $('quickMaterial').textContent = p.material;
+      $('quickDimensions').textContent = p.size;
+      openLayer('quickOverlay');
+    }
+    function waLink(text) {
+      const num = settings.whatsapp.replace(/\D/g, '');
+      return num
+        ? `https://wa.me/${num}?text=${encodeURIComponent(text)}`
+        : `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    }
+    function openWhatsApp(text) {
+      window.open(waLink(text), '_blank', 'noopener,noreferrer');
+      if (!settings.whatsapp)
+        notify(
+          'Falta configurar el número de MARVI: elige un contacto en WhatsApp o copia el texto.',
+        );
+    }
+    async function copyText(value) {
+      try {
+        await navigator.clipboard.writeText(value);
+        notify('Texto copiado al portapapeles.');
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = value;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        notify(
+          ok
+            ? 'Texto copiado.'
+            : 'Selecciona el resumen y cópialo manualmente.',
+        );
+      }
+    }
+    function updateSettingsUI() {
+      const phone = settings.whatsapp.replace(/\D/g, '');
+      $('contactPhone').textContent = phone
+        ? `WhatsApp · +${phone}`
+        : 'WhatsApp · pendiente de configurar';
+      $('contactEmail').textContent =
+        settings.email || 'Correo · pendiente de configurar';
+      $('shopAddress').textContent =
+        settings.address || 'La Paz, Bolivia · ubicación referencial';
+      $('contactLocation').textContent =
+        settings.address || 'La Paz, Bolivia · referencia de demostración';
+      $('shopHours').textContent =
+        settings.hours || 'Consulta disponibilidad antes de visitar';
+      $('mapCaption').innerHTML = settings.address
+        ? `${esc(settings.address)}<small>Consulta la dirección antes de visitar</small>`
+        : 'LA PAZ · BOLIVIA<small>Vista referencial, no marca una tienda real</small>';
+      const mapURL = settings.address
+        ? `https://maps.google.com/maps?q=${encodeURIComponent(settings.address)}&output=embed`
+        : 'https://www.openstreetmap.org/export/embed.html?bbox=-68.157%2C-16.525%2C-68.096%2C-16.475&layer=mapnik';
+      if ($('mapFrame').getAttribute('src') !== mapURL)
+        $('mapFrame').src = mapURL;
+      $('mapFrame').title = settings.address
+        ? `Mapa de la dirección configurada: ${settings.address}`
+        : 'Mapa interactivo referencial de La Paz, Bolivia';
+      $('mapSource').textContent =
+        `Puedes ampliar y mover el mapa libremente · Datos de ${settings.address ? 'Google Maps' : 'OpenStreetMap'}`;
+    }
+    function showConfig() {
+      $('cfgWhatsApp').value = settings.whatsapp;
+      $('cfgEmail').value = settings.email;
+      $('cfgAddress').value = settings.address;
+      $('cfgHours').value = settings.hours;
+      openLayer('configOverlay');
+    }
+    function openCheckout() {
+      if (!cart.length) return;
+      closeLayer('cartOverlay', false);
+      $('orderOverlay')
+        .querySelector('[role="dialog"]')
+        .setAttribute('aria-labelledby', 'orderTitle');
+      $('orderCheckout').style.display = 'block';
+      $('orderSuccess').classList.remove('active');
+      $('orderCount').textContent =
+        `${cart.reduce((a, i) => a + i.qty, 0)} artículo(s)`;
+      $('orderTotal').textContent = currencyBOB(
+        cart.reduce(
+          (a, i) => a + i.qty * PRODUCTS.find((p) => p.id === i.id).price,
+          0,
+        ),
+      );
+      openLayer('orderOverlay');
+    }
+    $('themeToggle').addEventListener('click', () =>
+      setTheme(theme === 'light' ? 'dark' : 'light'),
+    );
+    $('currency').value = currency;
+    $('currency').addEventListener('change', (e) => {
+      currency = e.target.value;
+      storage.setItem('marvi:currency', currency);
+      renderProducts();
+      if (currentQuickId && $('quickOverlay').classList.contains('open'))
+        quickView(currentQuickId);
+    });
+    $('searchHeader').addEventListener('click', () => {
+      $('catalogo').scrollIntoView({ behavior: scrollBehavior() });
+      setTimeout(() => $('productSearch').focus({ preventScroll: true }), 550);
+    });
+    $('openCart').addEventListener('click', () => openLayer('cartOverlay'));
+    $('footerCart').addEventListener('click', () => openLayer('cartOverlay'));
+    function setMenu(open) {
+      $('mobileNav').classList.toggle('open', open);
+      $('mobileNav').inert = !open;
+      $('menuToggle').setAttribute('aria-expanded', String(open));
+      $('menuToggle').setAttribute(
+        'aria-label',
+        open ? 'Cerrar menú' : 'Abrir menú',
+      );
+      $('menuToggle').innerHTML = icon(open ? 'close' : 'menu');
+    }
+    $('menuToggle').addEventListener('click', () => {
+      setMenu(!$('mobileNav').classList.contains('open'));
+    });
+    $('mobileNav')
+      .querySelectorAll('a')
+      .forEach((a) => a.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('click', (event) => {
+      if (!event.composedPath().includes($('menuToggle').closest('.header')))
+        setMenu(false);
+    });
+    window
+      .matchMedia('(min-width: 901px)')
+      .addEventListener('change', () => setMenu(false));
+    document
+      .querySelectorAll('[data-filter]')
+      .forEach((b) =>
+        b.addEventListener('click', () => setCategory(b.dataset.filter)),
+      );
+    document
+      .querySelectorAll('[data-go-category]')
+      .forEach((a) =>
+        a.addEventListener('click', () => setCategory(a.dataset.goCategory)),
+      );
+    $('productSearch').addEventListener('input', (e) => {
+      query = e.target.value;
+      renderProducts();
+    });
+    $('sortProducts').addEventListener('change', (e) => {
+      sort = e.target.value;
+      renderProducts();
+    });
+    $('clearFilters').addEventListener('click', () => {
+      query = '';
+      sort = 'featured';
+      $('productSearch').value = '';
+      $('sortProducts').value = 'featured';
+      setCategory('Todos');
+    });
+    $('productGrid').addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      if (b.id === 'emptyReset') {
+        $('clearFilters').click();
+        return;
+      }
+      if (b.dataset.add) addCart(Number(b.dataset.add));
+      else if (b.dataset.fav) toggleFavorite(Number(b.dataset.fav));
+      else if (b.dataset.quick) quickView(Number(b.dataset.quick));
+    });
+    $('cartItems').addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      if (b.id === 'shopFromCart') {
+        closeLayer('cartOverlay');
+        $('catalogo').scrollIntoView({ behavior: scrollBehavior() });
+      }
+      if (b.dataset.remove) mutateCart(Number(b.dataset.remove), 'remove');
+      if (b.dataset.inc) mutateCart(Number(b.dataset.inc), 'inc');
+      if (b.dataset.dec) mutateCart(Number(b.dataset.dec), 'dec');
+    });
+    $('checkoutBtn').addEventListener('click', openCheckout);
+    $('quickAdd').addEventListener('click', () => {
+      if (currentQuickId) addCart(currentQuickId);
+      closeLayer('quickOverlay', false);
+      openLayer('cartOverlay');
+    });
+    document
+      .querySelectorAll('[data-close]')
+      .forEach((b) =>
+        b.addEventListener('click', () => closeLayer(b.dataset.close)),
+      );
+    document.querySelectorAll('.overlay').forEach((o) =>
+      o.addEventListener('mousedown', (e) => {
+        if (e.target === o) closeLayer(o.id);
+      }),
+    );
+    document.addEventListener('keydown', (e) => {
+      const opened = document.querySelector('.overlay.open');
+      if (e.key === 'Escape') {
+        if (opened) closeLayer(opened.id);
+        else if ($('mobileNav').classList.contains('open')) {
+          setMenu(false);
+          $('menuToggle').focus();
+        }
+      }
+      if (e.key === 'Tab' && opened) {
+        const focusable = [
+          ...opened.querySelectorAll(
+            'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]',
+          ),
+        ].filter((el) => el.getClientRects().length && !el.closest('[hidden]'));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+    $('deliveryMode').addEventListener('change', (e) => {
+      const delivery = e.target.value.includes('domicilio');
+      $('deliveryAddressField').hidden = !delivery;
+      $('deliveryAddress').required = delivery;
+    });
+    $('orderForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!cart.length) {
+        notify('Tu carrito está vacío');
+        return;
+      }
+      const number = `MRV-${Date.now().toString().slice(-8)}`;
+      const sum = cart.reduce(
+        (a, i) => a + i.qty * PRODUCTS.find((p) => p.id === i.id).price,
+        0,
+      );
+      const lines = cart
+        .map((i) => {
+          const p = PRODUCTS.find((p) => p.id === i.id);
+          return `• ${p.name} × ${i.qty} — ${currencyBOB(p.price * i.qty)}`;
+        })
+        .join('\n');
+      preparedText = `Hola, MARVI. Quiero consultar disponibilidad y confirmar este pedido:\n\n*PEDIDO ${number}*\n${lines}\n\n*Subtotal estimado: ${currencyBOB(sum)}*\n\n*Nombre:* ${$('orderName').value.trim()}\n*Teléfono:* ${$('orderPhone').value.trim()}\n*Modalidad:* ${$('deliveryMode').value}\n*Dirección/Zona:* ${$('deliveryAddress').value.trim() || 'Por coordinar'}\n*Notas:* ${$('orderNotes').value.trim() || 'Sin observaciones'}\n\n¿Podrían confirmarme disponibilidad, entrega y precio final?`;
+      try {
+        const storedOrders = loadJSON('marvi:orders', []);
+        const orders = Array.isArray(storedOrders) ? storedOrders : [];
+        orders.unshift({
+          number,
+          date: new Date().toISOString(),
+          subtotal: sum,
+          items: cart,
+          preparedText,
+        });
+        saveJSON('marvi:orders', orders.slice(0, 30));
+      } catch {
+        // Un historial local inválido no debe impedir compartir el pedido preparado.
+      }
+      $('orderPreview').textContent = preparedText;
+      $('orderCheckout').style.display = 'none';
+      $('orderSuccess').classList.add('active');
+      $('orderOverlay')
+        .querySelector('[role="dialog"]')
+        .setAttribute('aria-labelledby', 'orderSuccessTitle');
+      $('orderOverlay').querySelector('.modal').scrollTop = 0;
+      $('orderSuccessTitle').focus({ preventScroll: true });
+      $('orderSuccessText').textContent = settings.whatsapp
+        ? 'Tu pedido se guardó en este navegador. Pulsa el botón de WhatsApp para enviarlo a MARVI.'
+        : 'Tu pedido se guardó en este navegador, pero aún no ha sido enviado. Configura el número de MARVI o comparte el mensaje con la tienda.';
+    });
+    $('copyOrder').addEventListener('click', () => copyText(preparedText));
+    $('sendOrder').addEventListener('click', () => openWhatsApp(preparedText));
+    $('waFloat').addEventListener('click', () =>
+      openWhatsApp(
+        'Hola, MARVI. Quisiera información sobre sus muebles y precios.',
+      ),
+    );
+    $('directionsBtn').addEventListener('click', () => {
+      if (!settings.address) {
+        notify('La dirección exacta de MARVI aún no está configurada.');
+        return;
+      }
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address)}`,
+        '_blank',
+        'noopener,noreferrer',
+      );
+    });
+    $('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = `Hola, MARVI. Mi nombre es ${$('contactName').value.trim()}.\nContacto: ${$('contactContact').value.trim()}\nTema: ${$('contactTopic').value}\nMensaje: ${$('contactMessage').value.trim()}`;
+      openWhatsApp(text);
+    });
+    $('newsForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = `Hola, MARVI. Me gustaría recibir información sobre sus novedades. Mi correo es: ${$('newsEmail').value.trim()}`;
+      openWhatsApp(text);
+    });
+    $('footerFavorites').addEventListener('click', () => {
+      setCategory('Favoritos');
+      $('catalogo').scrollIntoView({ behavior: scrollBehavior() });
+    });
+    ['footerConfig', 'footerConfig2'].forEach((id) =>
+      $(id).addEventListener('click', showConfig),
+    );
+    $('configForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const raw = $('cfgWhatsApp').value.replace(/\D/g, '');
+      if (raw && !/^\d{10,15}$/.test(raw)) {
+        notify(
+          'Usa entre 10 y 15 dígitos, incluyendo el prefijo internacional (591 para Bolivia).',
+        );
+        return;
+      }
+      settings.whatsapp = raw;
+      settings.email = $('cfgEmail').value.trim();
+      settings.address = $('cfgAddress').value.trim();
+      settings.hours = $('cfgHours').value.trim();
+      saveJSON('marvi:settings', settings);
+      updateSettingsUI();
+      closeLayer('configOverlay');
+      notify(
+        'Datos guardados en este navegador. Edítalos también en el código para publicar.',
+      );
+    });
+    const back = $('backTop');
+    back.addEventListener('click', () =>
+      window.scrollTo({ top: 0, behavior: scrollBehavior() }),
+    );
+    window.addEventListener(
+      'scroll',
+      () => back.classList.toggle('show', window.scrollY > 620),
+      { passive: true },
+    );
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries, obs) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('appear');
+              obs.unobserve(e.target);
+            }
+          }),
+        { threshold: 0.09 },
+      );
+      document
+        .querySelectorAll('.reveal')
+        .forEach((el) => observer.observe(el));
+    } else
+      document
+        .querySelectorAll('.reveal')
+        .forEach((el) => el.classList.add('appear'));
+    document.querySelectorAll('.overlay').forEach((el) => {
+      el.inert = true;
+    });
+    setMenu(false);
+    $('year').textContent = new Date().getFullYear();
+    setTheme(theme);
+    setCategory('Todos');
+    renderCart();
+    updateSettingsUI();
+  })();
+</script>

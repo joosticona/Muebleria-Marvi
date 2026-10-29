@@ -1,0 +1,11 @@
+---
+const { eyebrow, title, description, class: className = '' } = Astro.props;
+---
+
+<div class={`section-head reveal ${className}`.trim()}>
+  <div>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <slot name="title">{title && <h2>{title}</h2>}</slot>
+  </div>
+  <slot name="description">{description && <p>{description}</p>}</slot>
+</div>

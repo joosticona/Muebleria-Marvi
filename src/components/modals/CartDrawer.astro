@@ -1,0 +1,45 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+---
+
+<div inert class="overlay" id="cartOverlay" aria-hidden="true">
+  <aside
+    class="drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cartTitle"
+  >
+    <div class="drawer-top">
+      <h2 id="cartTitle">
+        Tu carrito{' '}
+        <small
+          id="cartTopCount"
+          style="font:600 12px var(--ui);color:var(--muted)"
+        ></small>
+      </h2>
+      <button
+        class="icon-button"
+        type="button"
+        data-close="cartOverlay"
+        aria-label="Cerrar carrito"
+      >
+        <Icon name="close" />
+      </button>
+    </div>
+    <div class="drawer-content" id="cartItems"></div>
+    <div class="cart-bottom">
+      <div class="cart-sub">
+        <span>Subtotal estimado</span>
+        <strong id="cartTotal">Bs 0</strong>
+      </div>
+      <p>
+        Todos los pedidos se calculan en bolivianos. Transporte, stock y forma
+        de pago se coordinan con la tienda.
+      </p>
+      <Button variant="dark" block id="checkoutBtn" type="button">
+        Preparar mi pedido <Icon name="arrow" />
+      </Button>
+    </div>
+  </aside>
+</div>

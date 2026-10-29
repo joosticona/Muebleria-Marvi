@@ -1,0 +1,68 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+---
+
+<section class="location" id="ubicacion">
+  <div class="shell location-grid">
+    <div class="location-left reveal">
+      <p class="eyebrow">Estamos más cerca</p>
+      <h2>
+        Ven a imaginar
+        <br />
+        <em>tu próximo hogar.</em>
+      </h2>
+      <p>
+        El mapa es interactivo y muestra La Paz como referencia inicial.
+        Configura la dirección real de MARVI para activar indicaciones exactas.
+      </p>
+      <div class="location-meta">
+        <div class="location-line">
+          <Icon name="pin" />
+          <div>
+            <strong>Ubicación</strong>
+            <span id="shopAddress">
+              La Paz, Bolivia · ubicación referencial
+            </span>
+          </div>
+        </div>
+        <div class="location-line">
+          <Icon name="clock" />
+          <div>
+            <strong>Visitas y horarios</strong>
+            <span id="shopHours">Consulta disponibilidad antes de visitar</span>
+          </div>
+        </div>
+      </div>
+      <div class="location-actions">
+        <Button variant="dark" id="directionsBtn" type="button">
+          Cómo llegar <Icon name="arrow" />
+        </Button>
+        <Button variant="outline" href="#contacto">
+          Solicitar información
+        </Button>
+      </div>
+    </div>
+    <div>
+      <div class="map-card reveal">
+        <iframe
+          title="Mapa interactivo referencial de La Paz, Bolivia"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          id="mapFrame"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-68.157%2C-16.525%2C-68.096%2C-16.475&layer=mapnik"
+        ></iframe>
+        <div class="map-marker-label" id="mapCaption">
+          LA PAZ · BOLIVIA
+          <small>Vista referencial, no marca una tienda real</small>
+        </div>
+      </div>
+      <div class="map-actions">
+        <Icon name="pin" size="tiny" />{' '}
+        <span id="mapSource">
+          Puedes ampliar y mover el mapa libremente · Datos de OpenStreetMap
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

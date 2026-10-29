@@ -1,0 +1,74 @@
+---
+import Icon from '../common/Icon.astro';
+---
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="#inicio">
+          <span class="brand-name">MARVI</span>
+          <span class="brand-caption">MUEBLES & DISEÑO</span>
+        </a>
+        <p>
+          Espacios bien pensados para una vida mejor. Una nueva perspectiva del
+          hogar, con diseño en cada detalle.
+        </p>
+      </div>
+      <div>
+        <h4>Explora</h4>
+        <div class="footer-links">
+          <a href="#colecciones">Colecciones</a>
+          <a href="#catalogo">Catálogo</a>
+          <a href="#nosotros">Nuestra esencia</a>
+          <a href="#ubicacion">Visítanos</a>
+        </div>
+      </div>
+      <div>
+        <h4>Te ayudamos</h4>
+        <div class="footer-links">
+          <a href="#contacto">Contactar</a>
+          <button id="footerCart" type="button">
+            Mi carrito
+          </button>
+          <button id="footerFavorites" type="button">
+            Mis favoritos
+          </button>
+          <button id="footerConfig" type="button">
+            Configurar datos de la tienda
+          </button>
+        </div>
+      </div>
+      <div class="footer-news">
+        <h4>Entra al universo MARVI</h4>
+        <p>
+          Recibe una idea para tu hogar. En esta demo, puedes preparar una
+          solicitud de novedades sin suscripción a servidor.
+        </p>
+        <form class="footer-subscribe" id="newsForm">
+          <input
+            type="email"
+            id="newsEmail"
+            placeholder="Tu correo electrónico"
+            required
+            aria-label="Correo para novedades"
+          />
+          <button type="submit" aria-label="Preparar solicitud de novedades">
+            <Icon name="arrow" />
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>
+        © <span id="year"></span> MARVI — Muebles & Diseño. Sitio demostrativo.
+      </span>
+      <span>
+        Hecho para inspirar · Precios y fotografías de ejemplo ·{' '}
+        <button id="footerConfig2" type="button">
+          Editar datos del negocio
+        </button>
+      </span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,48 @@
+---
+import SectionHead from '../common/SectionHead.astro';
+
+const steps = [
+  {
+    number: '01 / Explora',
+    title: 'Descubre lo que te encanta',
+    description:
+      'Navega el catálogo, filtra por ambiente y guarda los muebles que más te gustan.',
+  },
+  {
+    number: '02 / Selecciona',
+    title: 'Arma tu pedido',
+    description:
+      'Agrega al carrito, ajusta cantidades y confirma tus preferencias de entrega.',
+  },
+  {
+    number: '03 / Coordina',
+    title: 'Habla con MARVI',
+    description:
+      'Prepara el resumen de tu pedido para enviarlo por WhatsApp. La compra se confirma directamente con la tienda.',
+  },
+];
+---
+
+<section class="section journey">
+  <div class="shell">
+    <SectionHead
+      eyebrow="Comprar es sencillo"
+      description="De la inspiración a tu hogar: descubre, elige y prepara tu consulta en pocos pasos."
+    >
+      <h2 slot="title">
+        Así comienza
+        <br />
+        <em>tu nuevo espacio.</em>
+      </h2>
+    </SectionHead>
+    <div class="journey-grid">
+      {steps.map((step) => (
+        <div class="journey-item reveal">
+          <span class="num">{step.number}</span>
+          <h3>{step.title}</h3>
+          <p>{step.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

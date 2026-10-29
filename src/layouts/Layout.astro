@@ -1,0 +1,72 @@
+---
+import SvgSprite from '../components/common/SvgSprite.astro';
+import Footer from '../components/layout/Footer.astro';
+import Header from '../components/layout/Header.astro';
+import CartDrawer from '../components/modals/CartDrawer.astro';
+import ConfigModal from '../components/modals/ConfigModal.astro';
+import OrderModal from '../components/modals/OrderModal.astro';
+import QuickViewModal from '../components/modals/QuickViewModal.astro';
+import StoreScript from '../components/scripts/StoreScript.astro';
+import FloatActions from '../components/ui/FloatActions.astro';
+import '../styles/global.css';
+
+const {
+  title = 'MARVI — Muebles & Diseño para vivir',
+  description = 'MARVI · Muebles con diseño para los espacios de tu vida. Explora nuestro catálogo ilustrativo, descubre inspiración y prepara tu pedido en bolivianos.',
+  defaultStore,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8f7f4" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content="MARVI — Espacios que se sienten tuyos" />
+    <meta
+      property="og:description"
+      content="Diseño, materiales y detalles para transformar cada rincón."
+    />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">
+      Saltar al contenido
+    </a>
+
+    <SvgSprite />
+
+    <Header />
+
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <FloatActions />
+
+    <CartDrawer />
+    <QuickViewModal />
+    <OrderModal />
+    <ConfigModal />
+
+    <noscript>
+      <p class="shell">
+        Activa JavaScript para explorar el catálogo, utilizar el carrito y
+        preparar mensajes. También puedes recorrer las colecciones y la
+        información de la tienda.
+      </p>
+    </noscript>
+
+    <StoreScript defaultStore={defaultStore} />
+  </body>
+</html>
