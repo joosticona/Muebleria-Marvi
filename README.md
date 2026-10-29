@@ -16,11 +16,11 @@ Plantilla moderna para una mueblería, con aspecto editorial, responsive y funci
 
 ## Cómo arrancar el proyecto
 
-Requiere Node.js moderno y conexión para instalar Astro.
+Requiere [Bun](https://bun.sh/) (configuración verificada con Bun 1.4.3) y conexión para instalar las dependencias. Se incluye `bun.lock` para instalaciones reproducibles.
 
 ```bash
-npm install
-npm run dev
+bun install --frozen-lockfile
+bun run --bun dev
 ```
 
 Abre la dirección local que muestra Astro, por lo general `http://localhost:4321`.
@@ -28,13 +28,28 @@ Abre la dirección local que muestra Astro, por lo general `http://localhost:432
 Para generar el sitio estático:
 
 ```bash
-npm run build
-npm run preview
+bun run --bun build
+bun run --bun preview
 ```
 
 Los archivos compilados se crean en `dist/`.
 
 **Vista previa instantánea:** también puedes abrir `preview.html` directamente en un navegador sin instalar Astro. Es una copia HTML independiente del mismo diseño e interacciones. Las fotografías, mapa y tipografías externos necesitan internet.
+
+## Calidad y formato
+
+Los comandos usan `--bun` para ejecutar las herramientas con Bun:
+
+```bash
+bun run --bun lint          # Comprobar ESLint sin advertencias
+bun run --bun lint:fix      # Aplicar correcciones automáticas
+bun run --bun format        # Formatear todo el proyecto
+bun run --bun format:check  # Verificar formato sin modificar archivos
+```
+
+ESLint usa configuración plana en `eslint.config.js`, reglas recomendadas de JavaScript y Astro, y analiza también los scripts incrustados en `src/pages/index.astro` y `preview.html`. Prettier usa `.prettierrc.json` con soporte Astro, dos espacios, comillas simples en JavaScript y punto y coma. Las reglas de formato incompatibles de ESLint se desactivan mediante `eslint-config-prettier`.
+
+Se excluyen las dependencias y los directorios generados (`node_modules/`, `dist/` y `.astro/`); Prettier tampoco modifica el lockfile de Bun. La vista previa HTML es independiente: cualquier cambio funcional debe mantenerse en ambas versiones.
 
 ## Qué personalizar antes de publicar
 
