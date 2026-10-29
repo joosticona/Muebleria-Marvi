@@ -1,0 +1,69 @@
+# MARVI · Mueblería — Sitio web en Astro
+
+Plantilla moderna para una mueblería, con aspecto editorial, responsive y funcionalidades interactivas. **La página principal concentra el HTML, CSS y JavaScript en un único archivo:** `src/pages/index.astro`.
+
+## Qué contiene
+
+- Hero fotográfico, colecciones de sala/comedor/dormitorio, marca, beneficios, proceso de pedido, contacto y pie de página.
+- Catálogo de **12 productos ilustrativos**, filtros, orden por precio/nombre, búsqueda, detalle de producto y favoritos.
+- Carrito con cantidades y total **siempre calculado en bolivianos (Bs)**.
+- Selector de visualización BOB/USD con conversión **ilustrativa**, no conectada a un tipo de cambio en tiempo real.
+- Formulario para **preparar** un pedido; genera un resumen para copiar o compartir por WhatsApp. Incluye modalidad de entrega y notas.
+- Personalización de WhatsApp, correo, dirección y horarios desde el enlace «Editar datos del negocio» del pie de página (solo en el navegador actual).
+- Mapa interactivo con La Paz como **referencia**, hasta que se establezca la dirección correcta.
+- Formulario de consultas que prepara un mensaje para compartir, modo claro/oscuro, navegación móvil, animaciones y botón para subir.
+- Los favoritos, carrito, temas, preferencias y pedidos preparados se guardan localmente en el dispositivo mediante `localStorage` (si el navegador lo permite).
+
+## Cómo arrancar el proyecto
+
+Requiere Node.js moderno y conexión para instalar Astro.
+
+```bash
+npm install
+npm run dev
+```
+
+Abre la dirección local que muestra Astro, por lo general `http://localhost:4321`.
+
+Para generar el sitio estático:
+
+```bash
+npm run build
+npm run preview
+```
+
+Los archivos compilados se crean en `dist/`.
+
+**Vista previa instantánea:** también puedes abrir `preview.html` directamente en un navegador sin instalar Astro. Es una copia HTML independiente del mismo diseño e interacciones. Las fotografías, mapa y tipografías externos necesitan internet.
+
+## Qué personalizar antes de publicar
+
+1. En `src/pages/index.astro`, localiza `DEFAULT_STORE` y rellena `whatsapp`, `email`, `address`, `hours` y `city`. El WhatsApp debe tener prefijo internacional sin `+` (por ejemplo, 591 seguido del número boliviano). **No se incluye ningún contacto inventado.**
+2. Sustituye `PRODUCTS` por el inventario real: precios en Bs, nombre, categoría, dimensiones, foto, material, descripción y disponibilidad.
+3. Cambia fotografías de demostración por fotos propias de los productos y verifica sus licencias. Se usan enlaces externos de Unsplash como referencias visuales. Las fotografías no necesariamente corresponden al artículo nombrado.
+4. Verifica dirección y la posición exacta del mapa. El mapa predeterminado muestra una zona de **La Paz**, no una ubicación de MARVI. Al configurar una dirección el sitio utiliza una vista de Google Maps con la búsqueda de esa dirección; comprueba su resultado antes de publicar.
+5. Revisa textos comerciales, condiciones de venta, entrega, garantías y comunicación del negocio.
+6. Para modificar la conversión ilustrativa edita `usdRate` en `DEFAULT_STORE`. El valor inicial **6.96 Bs/USD es un ejemplo**, no una cotización actual, oficial o garantizada. Las órdenes se calculan siempre en Bs.
+
+### Sobre la funcionalidad de pedidos
+
+Esta versión es un **prototipo front-end**: no procesa pagos, no administra stock ni tiene una base de datos o servidor para recibir pedidos. Al preparar un pedido, el navegador lo guarda localmente y ofrece enviarlo por WhatsApp; **no se debe interpretar como pedido recibido** hasta que el negocio confirme su recepción. Si no configuraste el número de MARVI, el botón de compartir abre WhatsApp con el texto y tendrás que elegir manualmente un destinatario.
+
+Los cambios hechos desde la interfaz de configuración se guardan solo en ese navegador; para que se vean en todos los dispositivos, edita el código y vuelve a desplegar la web.
+
+## Estructura
+
+```text
+MARVI-Astro/
+├── src/
+│   └── pages/
+│       └── index.astro  ← todo el HTML, CSS y JavaScript
+├── astro.config.mjs
+├── package.json
+├── preview.html    ← versión HTML directa
+└── README.md
+```
+
+## Inspiración y recursos
+
+Dirección visual inspirada en patrones de tiendas contemporáneas de muebles: fotografía protagonista, paleta neutra, navegación por estancias y tarjetas de producto claras. Referencias generales: HAY (hay.com), bibliotecas UI Discovery y el estudio de UX de Baymard sobre tiendas de muebles. Fotografías demostrativas servidas desde `images.unsplash.com`. Mapa de muestra de OpenStreetMap.
