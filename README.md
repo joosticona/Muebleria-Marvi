@@ -51,6 +51,17 @@ ESLint usa configuración plana en `eslint.config.js`, reglas recomendadas de Ja
 
 Se excluyen las dependencias y los directorios generados (`node_modules/`, `dist/` y `.astro/`); Prettier tampoco modifica el lockfile de Bun. La vista previa HTML es independiente: cualquier cambio funcional debe mantenerse en ambas versiones.
 
+## Comprobación visual y de interacciones
+
+Al modificar la interfaz, revisar la página Astro y la vista previa HTML independiente:
+
+- Probar anchos móviles (320–480 px), tablet (680–1024 px) y escritorio (1280 px o superior), incluyendo orientación horizontal y alturas reducidas. No debe haber desbordamiento horizontal de la página; las categorías del catálogo tienen desplazamiento horizontal propio.
+- Comprobar temas claro/oscuro, BOB/USD, filtros, búsqueda sin resultados, favoritos, ordenamiento, detalles del producto y controles del carrito.
+- Recorrer el pedido con entrega y recojo, formularios de contacto/novedades y configuración del negocio. Los mensajes se preparan localmente; no enviar datos reales durante las pruebas.
+- Navegar con teclado: menú móvil, cierre con Escape, foco contenido en las ventanas y retorno al control que las abrió. Revisar también `prefers-reduced-motion`.
+- El catálogo y el carrito generan HTML en JavaScript: sus estilos deben seguir siendo globales para alcanzar esos elementos. Las imágenes tienen tamaños reservados y un reemplazo local si falla una fotografía externa.
+- Verificar que datos locales malformados o almacenamiento bloqueado no impidan cargar el catálogo ni utilizar el tema y el carrito.
+
 ## Qué personalizar antes de publicar
 
 1. En `src/pages/index.astro`, localiza `DEFAULT_STORE` y rellena `whatsapp`, `email`, `address`, `hours` y `city`. El WhatsApp debe tener prefijo internacional sin `+` (por ejemplo, 591 seguido del número boliviano). **No se incluye ningún contacto inventado.**

@@ -20,14 +20,15 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
       rel="stylesheet"
     />
-    <style>
+    <!-- Los estilos también deben alcanzar el catálogo y el carrito generados en JavaScript. -->
+    <style is:global>
       :root {
         color-scheme: light;
         --bg: #f9f8f5;
         --surface: #fffefa;
         --surface2: #f0efeb;
         --text: #252721;
-        --muted: #777a72;
+        --muted: #666b60;
         --edge: #e6e5df;
         --brand: #78634f;
         --branddark: #5d4a39;
@@ -42,6 +43,7 @@
       html {
         scroll-behavior: smooth;
         scroll-padding-top: 105px;
+        scrollbar-gutter: stable;
       }
       * {
         box-sizing: border-box;
@@ -109,6 +111,20 @@
       ::selection {
         background: #c7b299;
         color: #1f1f1b;
+      }
+      .skip-link {
+        position: fixed;
+        top: 8px;
+        left: 16px;
+        z-index: 200;
+        padding: 12px 18px;
+        background: var(--surface);
+        color: var(--text);
+        border: 2px solid var(--brand);
+        transform: translateY(-160%);
+      }
+      .skip-link:focus {
+        transform: translateY(0);
       }
       .sr-only {
         position: absolute;
@@ -1258,7 +1274,11 @@
         pointer-events: none;
         transition: 0.25s;
       }
+      .backtop {
+        visibility: hidden;
+      }
       .backtop.show {
+        visibility: visible;
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
@@ -1623,8 +1643,8 @@
         transform: translate(-50%, 0);
       }
       .reveal {
-        opacity: 0;
-        transform: translateY(32px);
+        opacity: 1;
+        transform: none;
         transition:
           opacity 0.75s,
           transform 0.75s;
@@ -1632,6 +1652,140 @@
       .reveal.appear {
         opacity: 1;
         transform: translateY(0);
+      }
+      .shell > *,
+      .contact-layout > *,
+      .contact-form > *,
+      .order-form > *,
+      .cart-item > *,
+      .catalog-options,
+      .catalog-search,
+      .catalog-search input,
+      .filter-list {
+        min-width: 0;
+      }
+      .field,
+      .contact-line span,
+      .location-line > div,
+      .order-summary,
+      .quick-info,
+      .cart-item-title,
+      .map-marker-label {
+        overflow-wrap: anywhere;
+      }
+      .btn,
+      .ico,
+      .circle-arrow,
+      .add-button {
+        flex-shrink: 0;
+      }
+      .btn {
+        text-align: center;
+      }
+      .filter-list {
+        padding: 4px;
+        scrollbar-width: thin;
+        scroll-padding-inline: 4px;
+      }
+      .filter-list::-webkit-scrollbar {
+        display: block;
+        height: 4px;
+      }
+      .filter {
+        flex-shrink: 0;
+      }
+      .field input:focus-visible,
+      .field textarea:focus-visible,
+      .field select:focus-visible,
+      .footer-subscribe input:focus-visible,
+      .catalog-search:focus-within {
+        outline: 2px solid var(--brand);
+        outline-offset: 3px;
+      }
+      .category-label {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .product-foot {
+        align-items: flex-end;
+        gap: 8px;
+      }
+      .product-price {
+        white-space: normal;
+      }
+      .product-price s {
+        display: inline-block;
+      }
+      .product-tag {
+        max-width: calc(100% - 68px);
+        overflow-wrap: anywhere;
+      }
+      .product-card:focus-within .quick-view {
+        transform: translateY(0);
+      }
+      .product-image img,
+      .cart-item img,
+      .quick-photo img {
+        background: var(--surface2);
+      }
+      .image-unavailable {
+        object-fit: contain !important;
+      }
+      .drawer {
+        max-height: 100dvh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      .drawer-content {
+        min-height: 0;
+        overscroll-behavior: contain;
+      }
+      .drawer-top,
+      .cart-bottom {
+        flex-shrink: 0;
+      }
+      .qty-line {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .modal {
+        max-height: calc(100dvh - 40px);
+        overscroll-behavior: contain;
+        transition:
+          opacity 0.3s,
+          transform 0.3s;
+      }
+      .quick-photo {
+        position: relative;
+      }
+      .quick-photo img {
+        position: absolute;
+        inset: 0;
+      }
+      .order-modal,
+      .settings-modal {
+        padding-top: 62px;
+      }
+      .toast {
+        width: max-content;
+        overflow-wrap: anywhere;
+      }
+      @media (max-height: 600px) {
+        .drawer-top {
+          padding: 12px 20px;
+        }
+        .cart-bottom {
+          padding: 12px 20px;
+        }
+        .cart-bottom p {
+          margin-block: 8px;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .js .reveal:not(.appear) {
+          opacity: 0;
+          transform: translateY(20px);
+        }
       }
       @media (max-width: 1150px) {
         .shell {
@@ -1682,9 +1836,13 @@
             max-height 0.35s,
             padding 0.35s;
           border-top: 0 solid var(--edge);
+          visibility: hidden;
         }
         .mobile-nav.open {
-          max-height: 330px;
+          visibility: visible;
+          max-height: min(330px, calc(100dvh - 90px));
+          overflow-y: auto;
+          overscroll-behavior: contain;
           padding: 14px 22px 20px;
           border-top-width: 1px;
         }
@@ -1704,7 +1862,14 @@
           display: none;
         }
         .categories {
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .category-label {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .category-label h3 {
+          font-size: clamp(28px, 4vw, 40px);
         }
         .category-card {
           min-height: 350px;
@@ -1967,7 +2132,31 @@
           height: 30px;
         }
         .quick-view {
-          display: none;
+          transform: none;
+          padding: 11px 8px;
+          bottom: 8px;
+          left: 8px;
+          right: 8px;
+          width: calc(100% - 16px);
+        }
+        .field input,
+        .field textarea,
+        .field select,
+        .catalog-search input,
+        .footer-subscribe input {
+          font-size: 16px;
+        }
+        .heart,
+        .add-button {
+          width: 36px;
+          height: 36px;
+        }
+        .category-label {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .category-label h3 {
+          font-size: clamp(22px, 5.5vw, 28px);
         }
         .banner-grid {
           grid-template-columns: 1fr;
@@ -2062,7 +2251,16 @@
         }
         .order-modal,
         .settings-modal {
-          padding: 27px 19px;
+          padding: 62px 19px 27px;
+        }
+        .modal {
+          max-height: calc(100dvh - 24px);
+        }
+        .catalog-options {
+          flex-wrap: wrap;
+        }
+        .catalog-search {
+          flex-basis: 160px;
         }
         .order-modal h2 {
           font-size: 34px;
@@ -2146,7 +2344,9 @@
         *::before,
         *::after {
           animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
         }
         .reveal {
           opacity: 1;
@@ -2156,6 +2356,9 @@
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">
+      Saltar al contenido
+    </a>
     <svg
       class="icon-sprite"
       xmlns="http://www.w3.org/2000/svg"
@@ -2298,6 +2501,7 @@
             type="button"
             aria-label="Abrir menú"
             aria-expanded="false"
+            aria-controls="mobileNav"
           >
             <svg class="ico">
               <use href="#i-menu"></use>
@@ -2305,7 +2509,12 @@
           </button>
         </div>
       </div>
-      <nav class="mobile-nav" id="mobileNav" aria-label="Navegación móvil">
+      <nav
+        inert
+        class="mobile-nav"
+        id="mobileNav"
+        aria-label="Navegación móvil"
+      >
         <a href="#colecciones">Colecciones</a>
         <a href="#catalogo">Catálogo</a>
         <a href="#nosotros">Nosotros</a>
@@ -2314,7 +2523,7 @@
       </nav>
     </header>
 
-    <main>
+    <main id="main-content" tabindex="-1">
       <section class="hero" id="inicio" aria-label="Bienvenidos a MARVI">
         <div class="hero-bg"></div>
         <div class="shell hero-inner">
@@ -2736,7 +2945,10 @@
               <svg class="ico tiny">
                 <use href="#i-pin"></use>
               </svg>{' '}
-              Puedes ampliar y mover el mapa libremente · Datos de OpenStreetMap
+              <span id="mapSource">
+                Puedes ampliar y mover el mapa libremente · Datos de
+                OpenStreetMap
+              </span>
             </div>
           </div>
         </div>
@@ -2931,7 +3143,7 @@
     </button>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <div class="overlay" id="cartOverlay" aria-hidden="true">
+    <div inert class="overlay" id="cartOverlay" aria-hidden="true">
       <aside
         class="drawer"
         role="dialog"
@@ -2977,7 +3189,7 @@
       </aside>
     </div>
 
-    <div class="overlay modal-shell" id="quickOverlay" aria-hidden="true">
+    <div inert class="overlay modal-shell" id="quickOverlay" aria-hidden="true">
       <div
         class="modal"
         role="dialog"
@@ -2996,7 +3208,7 @@
         </button>
         <div class="quick-layout">
           <div class="quick-photo">
-            <img id="quickImage" src="" alt="" />
+            <img id="quickImage" alt="" width="760" height="760" />
           </div>
           <div class="quick-info">
             <p class="eyebrow" id="quickCategory">
@@ -3027,7 +3239,7 @@
       </div>
     </div>
 
-    <div class="overlay modal-shell" id="orderOverlay" aria-hidden="true">
+    <div inert class="overlay modal-shell" id="orderOverlay" aria-hidden="true">
       <div
         class="modal order-modal"
         role="dialog"
@@ -3121,7 +3333,7 @@
           <p class="eyebrow" style="justify-content:center">
             Pedido preparado
           </p>
-          <h2>
+          <h2 id="orderSuccessTitle" tabindex="-1">
             ¡Tu espacio está
             <br />
             <em>más cerca!</em>
@@ -3150,7 +3362,12 @@
       </div>
     </div>
 
-    <div class="overlay modal-shell" id="configOverlay" aria-hidden="true">
+    <div
+      inert
+      class="overlay modal-shell"
+      id="configOverlay"
+      aria-hidden="true"
+    >
       <div
         class="modal settings-modal"
         role="dialog"
@@ -3207,6 +3424,13 @@
       </div>
     </div>
 
+    <noscript>
+      <p class="shell">
+        Activa JavaScript para explorar el cat?logo, utilizar el carrito y
+        preparar mensajes. Tambi?n puedes recorrer las colecciones y la
+        informaci?n de la tienda.
+      </p>
+    </noscript>
     <script is:inline>
       (() => {
         'use strict';
@@ -3271,7 +3495,7 @@
             price: 2190,
             material: 'Tela y estructura de madera',
             size: '73 × 77 × 85 cm',
-            img: 'photo-1598300053653-f02cd048e09f',
+            img: 'photo-1519947486511-46149fa0a254',
             desc: 'Curvas contemporáneas y un abrazo de textura para cualquier ambiente.',
           },
           {
@@ -3313,7 +3537,7 @@
             price: 1290,
             material: 'Madera maciza',
             size: '50 × 50 × 52 cm',
-            img: 'photo-1493663284031-b7e3aefcae8c',
+            img: 'photo-1538688423619-a81d3f23454b',
             desc: 'Pequeña, esencial y de gran personalidad, perfecta para acompañar una buena lectura.',
           },
           {
@@ -3349,14 +3573,47 @@
           },
         ];
         const $ = (id) => document.getElementById(id);
-        let storage;
-        try {
-          storage = window.localStorage;
-          storage.getItem('__marvi_test__');
-        } catch {
-          storage = { getItem: () => null, setItem: () => {} };
-        }
-        const icon = (id) => `<svg class="ico"><use href="#i-${id}"/></svg>`;
+        document.documentElement.classList.add('js');
+        const memory = new Map();
+        const storage = {
+          getItem(key) {
+            if (memory.has(key)) return memory.get(key);
+            try {
+              return window.localStorage.getItem(key);
+            } catch {
+              return null;
+            }
+          },
+          setItem(key, value) {
+            memory.set(key, value);
+            try {
+              window.localStorage.setItem(key, value);
+            } catch {
+              // Mantener las preferencias de esta sesión si el navegador bloquea el almacenamiento.
+            }
+          },
+        };
+        const icon = (id) =>
+          `<svg class="ico" aria-hidden="true" focusable="false"><use href="#i-${id}"/></svg>`;
+        const reducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        );
+        const scrollBehavior = () =>
+          reducedMotion.matches ? 'instant' : 'smooth';
+        const imagePlaceholder = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#e6e2db"/><g fill="none" stroke="#78634f" stroke-width="5"><path d="M100 235v-65q0-15 15-15h170q15 0 15 15v65M90 215h220v55H90zM110 270v20m180-20v20"/></g><text x="200" y="330" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#5d4a39">Imagen no disponible</text></svg>')}`;
+        document.addEventListener(
+          'error',
+          (event) => {
+            const image = event.target;
+            if (!(image instanceof HTMLImageElement) || image.dataset.fallback)
+              return;
+            image.dataset.fallback = 'true';
+            image.classList.add('image-unavailable');
+            image.removeAttribute('srcset');
+            image.src = imagePlaceholder;
+          },
+          true,
+        );
         const imageURL = (p, w = 760) =>
           `https://images.unsplash.com/${p.img}?auto=format&fit=crop&w=${w}&q=82`;
         const loadJSON = (key, fallback) => {
@@ -3373,17 +3630,32 @@
             // El almacenamiento puede estar bloqueado o sin espacio; continuar en memoria.
           }
         };
-        const settings = {
-          ...DEFAULT_STORE,
-          ...loadJSON('marvi:settings', {}),
-        };
-        let cart = loadJSON('marvi:cart', []).filter(
-          (item) =>
-            PRODUCTS.some((p) => p.id === item.id) &&
-            Number.isInteger(item.qty) &&
-            item.qty > 0,
-        );
-        let favorites = loadJSON('marvi:favorites', []);
+        const storedSettings = loadJSON('marvi:settings', {});
+        const settings = { ...DEFAULT_STORE };
+        for (const key of ['whatsapp', 'email', 'address', 'hours', 'city']) {
+          if (typeof storedSettings?.[key] === 'string')
+            settings[key] = storedSettings[key];
+        }
+        const rate = Number(storedSettings?.usdRate);
+        if (Number.isFinite(rate) && rate > 0) settings.usdRate = rate;
+        const storedCart = loadJSON('marvi:cart', []);
+        let cart = (Array.isArray(storedCart) ? storedCart : [])
+          .filter(
+            (item) =>
+              item &&
+              PRODUCTS.some((p) => p.id === item.id) &&
+              Number.isInteger(item.qty) &&
+              item.qty > 0,
+          )
+          .map((item) => ({ id: item.id, qty: Math.min(item.qty, 99) }));
+        const storedFavorites = loadJSON('marvi:favorites', []);
+        let favorites = [
+          ...new Set(
+            (Array.isArray(storedFavorites) ? storedFavorites : []).filter(
+              (id) => PRODUCTS.some((p) => p.id === id),
+            ),
+          ),
+        ];
         let currency =
           storage.getItem('marvi:currency') === 'USD' ? 'USD' : 'BOB';
         let theme =
@@ -3455,7 +3727,7 @@
             ? list
                 .map(
                   (p) =>
-                    `<article class="product-card"><div class="product-image"><img src="${imageURL(p)}" alt="Fotografía ilustrativa de ${esc(p.name)}" loading="lazy" decoding="async"/>${p.tag ? `<span class="product-tag">${esc(p.tag)}</span>` : ''}<button class="heart ${favorites.includes(p.id) ? 'saved' : ''}" type="button" data-fav="${p.id}" aria-label="${favorites.includes(p.id) ? 'Quitar de' : 'Añadir a'} favoritos: ${esc(p.name)}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button><button class="quick-view" type="button" data-quick="${p.id}">Ver detalles</button></div><div class="product-details"><div class="product-kicker">${esc(p.cat)} · Colección MARVI</div><h3 class="product-name">${esc(p.name)}</h3><div class="product-foot"><span class="product-price">${money(p.price)}${p.old ? ` <s>${money(p.old)}</s>` : ''}</span><button class="add-button" type="button" data-add="${p.id}" aria-label="Añadir ${esc(p.name)} al carrito">${icon('plus')}</button></div></div></article>`,
+                    `<article class="product-card"><div class="product-image"><img src="${imageURL(p)}" alt="Fotografía ilustrativa de ${esc(p.name)}" loading="lazy" decoding="async" width="760" height="855" sizes="(max-width: 680px) 50vw, (max-width: 1150px) 33vw, 25vw" srcset="${imageURL(p, 360)} 360w, ${imageURL(p, 760)} 760w"/>${p.tag ? `<span class="product-tag">${esc(p.tag)}</span>` : ''}<button class="heart ${favorites.includes(p.id) ? 'saved' : ''}" type="button" data-fav="${p.id}" aria-label="${favorites.includes(p.id) ? 'Quitar de' : 'Añadir a'} favoritos: ${esc(p.name)}" aria-pressed="${favorites.includes(p.id)}">${icon('heart')}</button><button class="quick-view" type="button" data-quick="${p.id}">Ver detalles</button></div><div class="product-details"><div class="product-kicker">${esc(p.cat)} · Colección MARVI</div><h3 class="product-name">${esc(p.name)}</h3><div class="product-foot"><span class="product-price">${money(p.price)}${p.old ? ` <s>${money(p.old)}</s>` : ''}</span><button class="add-button" type="button" data-add="${p.id}" aria-label="Añadir ${esc(p.name)} al carrito">${icon('plus')}</button></div></div></article>`,
                 )
                 .join('')
             : '<div class="empty-products"><h3>Sin coincidencias por aquí.</h3><p>Prueba otra búsqueda o elige otra categoría.</p><button class="btn btn-outline" id="emptyReset" type="button">Ver todos los muebles</button></div>';
@@ -3466,11 +3738,11 @@
         }
         function setCategory(cat) {
           category = cat;
-          document
-            .querySelectorAll('[data-filter]')
-            .forEach((b) =>
-              b.classList.toggle('active', b.dataset.filter === cat),
-            );
+          document.querySelectorAll('[data-filter]').forEach((b) => {
+            const active = b.dataset.filter === cat;
+            b.classList.toggle('active', active);
+            b.setAttribute('aria-pressed', String(active));
+          });
           renderProducts();
         }
         function renderCart() {
@@ -3487,7 +3759,7 @@
             ? cart
                 .map((i) => {
                   const p = PRODUCTS.find((p) => p.id === i.id);
-                  return `<article class="cart-item"><img src="${imageURL(p, 260)}" alt="${esc(p.name)}" loading="lazy"/><div><div class="cart-item-top"><div><p class="cart-item-title">${esc(p.name)}</p><div class="cart-item-category">${esc(p.cat)}</div></div><button class="remove-item" type="button" data-remove="${p.id}" aria-label="Quitar ${esc(p.name)}">${icon('close')}</button></div><span class="cart-item-price">${currencyBOB(p.price * i.qty)}</span><div class="qty-line"><div class="qty-ctrl"><button type="button" data-dec="${p.id}" aria-label="Reducir cantidad">−</button><span>${i.qty}</span><button type="button" data-inc="${p.id}" aria-label="Aumentar cantidad">+</button></div><span class="product-kicker">Unidad: ${currencyBOB(p.price)}</span></div></div></article>`;
+                  return `<article class="cart-item"><img src="${imageURL(p, 260)}" alt="${esc(p.name)}" loading="lazy" width="84" height="100"/><div><div class="cart-item-top"><div><p class="cart-item-title">${esc(p.name)}</p><div class="cart-item-category">${esc(p.cat)}</div></div><button class="remove-item" type="button" data-remove="${p.id}" aria-label="Quitar ${esc(p.name)}">${icon('close')}</button></div><span class="cart-item-price">${currencyBOB(p.price * i.qty)}</span><div class="qty-line"><div class="qty-ctrl"><button type="button" data-dec="${p.id}" aria-label="Reducir cantidad">−</button><span>${i.qty}</span><button type="button" data-inc="${p.id}" aria-label="Aumentar cantidad">+</button></div><span class="product-kicker">Unidad: ${currencyBOB(p.price)}</span></div></div></article>`;
                 })
                 .join('')
             : `<div class="cart-empty">${icon('bag')}<h3>Tu carrito está esperando.</h3><p>Descubre la colección y elige tus piezas favoritas.</p><button class="btn btn-dark" type="button" id="shopFromCart">Explorar catálogo</button></div>`;
@@ -3512,6 +3784,12 @@
             if (item.qty > 99) item.qty = 99;
           }
           renderCart();
+          const control = $('cartItems').querySelector(
+            `[data-${mode}="${id}"]`,
+          );
+          (control || $('cartOverlay').querySelector('[data-close]')).focus({
+            preventScroll: true,
+          });
         }
         function toggleFavorite(id) {
           favorites = favorites.includes(id)
@@ -3519,34 +3797,73 @@
             : [...favorites, id];
           saveJSON('marvi:favorites', favorites);
           renderProducts();
+          const favoriteButton = $('productGrid').querySelector(
+            `[data-fav="${id}"]`,
+          );
+          if (favoriteButton) favoriteButton.focus({ preventScroll: true });
+          else
+            document
+              .querySelector('[data-filter="Favoritos"]')
+              .focus({ preventScroll: true });
           notify(
             favorites.includes(id)
               ? 'Guardado en tus favoritos'
               : 'Quitado de tus favoritos',
           );
         }
+        let layerTrigger = null;
+        const backgroundElements = [...document.body.children].filter(
+          (el) =>
+            !el.classList.contains('overlay') &&
+            el.id !== 'toast' &&
+            el.tagName !== 'SCRIPT',
+        );
         function openLayer(id) {
+          const previous = document.querySelector('.overlay.open');
+          if (previous && previous.id !== id) closeLayer(previous.id, false);
+          if (!layerTrigger) layerTrigger = document.activeElement;
+          setMenu(false);
           const el = $(id);
+          el.inert = false;
           el.classList.add('open');
           el.setAttribute('aria-hidden', 'false');
           document.body.classList.add('locked');
-          setTimeout(() => {
-            const f =
-              el.querySelector('[data-close]') || el.querySelector('input');
-            if (f) f.focus();
-          }, 100);
+          backgroundElements.forEach((element) => {
+            element.inert = true;
+          });
+          setTimeout(
+            () => {
+              if (el.classList.contains('open'))
+                el.querySelector('[data-close]').focus({ preventScroll: true });
+            },
+            reducedMotion.matches ? 0 : 320,
+          );
         }
-        function closeLayer(id) {
+        function closeLayer(id, restoreFocus = true) {
           const el = $(id);
+          if (el.contains(document.activeElement))
+            document.activeElement.blur();
           el.classList.remove('open');
           el.setAttribute('aria-hidden', 'true');
-          if (!document.querySelector('.overlay.open'))
+          el.inert = true;
+          if (!document.querySelector('.overlay.open')) {
             document.body.classList.remove('locked');
+            backgroundElements.forEach((element) => {
+              element.inert = false;
+            });
+            if (restoreFocus) {
+              if (layerTrigger?.isConnected)
+                layerTrigger.focus({ preventScroll: true });
+              layerTrigger = null;
+            }
+          }
         }
         function quickView(id) {
           const p = PRODUCTS.find((p) => p.id === id);
           if (!p) return;
           currentQuickId = id;
+          delete $('quickImage').dataset.fallback;
+          $('quickImage').classList.remove('image-unavailable');
           $('quickImage').src = imageURL(p, 1100);
           $('quickImage').alt = `Fotografía ilustrativa de ${p.name}`;
           $('quickCategory').textContent = `${p.cat} · Colección MARVI`;
@@ -3606,9 +3923,16 @@
           $('mapCaption').innerHTML = settings.address
             ? `${esc(settings.address)}<small>Consulta la dirección antes de visitar</small>`
             : 'LA PAZ · BOLIVIA<small>Vista referencial, no marca una tienda real</small>';
-          $('mapFrame').src = settings.address
+          const mapURL = settings.address
             ? `https://maps.google.com/maps?q=${encodeURIComponent(settings.address)}&output=embed`
             : 'https://www.openstreetmap.org/export/embed.html?bbox=-68.157%2C-16.525%2C-68.096%2C-16.475&layer=mapnik';
+          if ($('mapFrame').getAttribute('src') !== mapURL)
+            $('mapFrame').src = mapURL;
+          $('mapFrame').title = settings.address
+            ? `Mapa de la dirección configurada: ${settings.address}`
+            : 'Mapa interactivo referencial de La Paz, Bolivia';
+          $('mapSource').textContent =
+            `Puedes ampliar y mover el mapa libremente · Datos de ${settings.address ? 'Google Maps' : 'OpenStreetMap'}`;
         }
         function showConfig() {
           $('cfgWhatsApp').value = settings.whatsapp;
@@ -3619,7 +3943,10 @@
         }
         function openCheckout() {
           if (!cart.length) return;
-          closeLayer('cartOverlay');
+          closeLayer('cartOverlay', false);
+          $('orderOverlay')
+            .querySelector('[role="dialog"]')
+            .setAttribute('aria-labelledby', 'orderTitle');
           $('orderCheckout').style.display = 'block';
           $('orderSuccess').classList.remove('active');
           $('orderCount').textContent =
@@ -3644,7 +3971,7 @@
             quickView(currentQuickId);
         });
         $('searchHeader').addEventListener('click', () => {
-          $('catalogo').scrollIntoView({ behavior: 'smooth' });
+          $('catalogo').scrollIntoView({ behavior: scrollBehavior() });
           setTimeout(
             () => $('productSearch').focus({ preventScroll: true }),
             550,
@@ -3654,24 +3981,31 @@
         $('footerCart').addEventListener('click', () =>
           openLayer('cartOverlay'),
         );
-        $('menuToggle').addEventListener('click', () => {
-          const open = $('mobileNav').classList.toggle('open');
+        function setMenu(open) {
+          $('mobileNav').classList.toggle('open', open);
+          $('mobileNav').inert = !open;
           $('menuToggle').setAttribute('aria-expanded', String(open));
           $('menuToggle').setAttribute(
             'aria-label',
             open ? 'Cerrar menú' : 'Abrir menú',
           );
           $('menuToggle').innerHTML = icon(open ? 'close' : 'menu');
+        }
+        $('menuToggle').addEventListener('click', () => {
+          setMenu(!$('mobileNav').classList.contains('open'));
         });
         $('mobileNav')
           .querySelectorAll('a')
-          .forEach((a) =>
-            a.addEventListener('click', () => {
-              $('mobileNav').classList.remove('open');
-              $('menuToggle').setAttribute('aria-expanded', 'false');
-              $('menuToggle').innerHTML = icon('menu');
-            }),
-          );
+          .forEach((a) => a.addEventListener('click', () => setMenu(false)));
+        document.addEventListener('click', (event) => {
+          if (
+            !event.composedPath().includes($('menuToggle').closest('.header'))
+          )
+            setMenu(false);
+        });
+        window
+          .matchMedia('(min-width: 901px)')
+          .addEventListener('change', () => setMenu(false));
         document
           .querySelectorAll('[data-filter]')
           .forEach((b) =>
@@ -3715,7 +4049,7 @@
           if (!b) return;
           if (b.id === 'shopFromCart') {
             closeLayer('cartOverlay');
-            $('catalogo').scrollIntoView({ behavior: 'smooth' });
+            $('catalogo').scrollIntoView({ behavior: scrollBehavior() });
           }
           if (b.dataset.remove) mutateCart(Number(b.dataset.remove), 'remove');
           if (b.dataset.inc) mutateCart(Number(b.dataset.inc), 'inc');
@@ -3724,7 +4058,7 @@
         $('checkoutBtn').addEventListener('click', openCheckout);
         $('quickAdd').addEventListener('click', () => {
           if (currentQuickId) addCart(currentQuickId);
-          closeLayer('quickOverlay');
+          closeLayer('quickOverlay', false);
           openLayer('cartOverlay');
         });
         document
@@ -3738,9 +4072,31 @@
           }),
         );
         document.addEventListener('keydown', (e) => {
+          const opened = document.querySelector('.overlay.open');
           if (e.key === 'Escape') {
-            const opened = document.querySelectorAll('.overlay.open');
-            if (opened.length) closeLayer(opened[opened.length - 1].id);
+            if (opened) closeLayer(opened.id);
+            else if ($('mobileNav').classList.contains('open')) {
+              setMenu(false);
+              $('menuToggle').focus();
+            }
+          }
+          if (e.key === 'Tab' && opened) {
+            const focusable = [
+              ...opened.querySelectorAll(
+                'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]',
+              ),
+            ].filter(
+              (el) => el.getClientRects().length && !el.closest('[hidden]'),
+            );
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
           }
         });
         $('deliveryMode').addEventListener('change', (e) => {
@@ -3767,7 +4123,8 @@
             .join('\n');
           preparedText = `Hola, MARVI. Quiero consultar disponibilidad y confirmar este pedido:\n\n*PEDIDO ${number}*\n${lines}\n\n*Subtotal estimado: ${currencyBOB(sum)}*\n\n*Nombre:* ${$('orderName').value.trim()}\n*Teléfono:* ${$('orderPhone').value.trim()}\n*Modalidad:* ${$('deliveryMode').value}\n*Dirección/Zona:* ${$('deliveryAddress').value.trim() || 'Por coordinar'}\n*Notas:* ${$('orderNotes').value.trim() || 'Sin observaciones'}\n\n¿Podrían confirmarme disponibilidad, entrega y precio final?`;
           try {
-            const orders = loadJSON('marvi:orders', []);
+            const storedOrders = loadJSON('marvi:orders', []);
+            const orders = Array.isArray(storedOrders) ? storedOrders : [];
             orders.unshift({
               number,
               date: new Date().toISOString(),
@@ -3782,6 +4139,11 @@
           $('orderPreview').textContent = preparedText;
           $('orderCheckout').style.display = 'none';
           $('orderSuccess').classList.add('active');
+          $('orderOverlay')
+            .querySelector('[role="dialog"]')
+            .setAttribute('aria-labelledby', 'orderSuccessTitle');
+          $('orderOverlay').querySelector('.modal').scrollTop = 0;
+          $('orderSuccessTitle').focus({ preventScroll: true });
           $('orderSuccessText').textContent = settings.whatsapp
             ? 'Tu pedido se guardó en este navegador. Pulsa el botón de WhatsApp para enviarlo a MARVI.'
             : 'Tu pedido se guardó en este navegador, pero aún no ha sido enviado. Configura el número de MARVI o comparte el mensaje con la tienda.';
@@ -3818,7 +4180,7 @@
         });
         $('footerFavorites').addEventListener('click', () => {
           setCategory('Favoritos');
-          $('catalogo').scrollIntoView({ behavior: 'smooth' });
+          $('catalogo').scrollIntoView({ behavior: scrollBehavior() });
         });
         ['footerConfig', 'footerConfig2'].forEach((id) =>
           $(id).addEventListener('click', showConfig),
@@ -3845,7 +4207,7 @@
         });
         const back = $('backTop');
         back.addEventListener('click', () =>
-          window.scrollTo({ top: 0, behavior: 'smooth' }),
+          window.scrollTo({ top: 0, behavior: scrollBehavior() }),
         );
         window.addEventListener(
           'scroll',
@@ -3870,9 +4232,13 @@
           document
             .querySelectorAll('.reveal')
             .forEach((el) => el.classList.add('appear'));
+        document.querySelectorAll('.overlay').forEach((el) => {
+          el.inert = true;
+        });
+        setMenu(false);
         $('year').textContent = new Date().getFullYear();
         setTheme(theme);
-        renderProducts();
+        setCategory('Todos');
         renderCart();
         updateSettingsUI();
       })();
